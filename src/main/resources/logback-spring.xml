@@ -1,0 +1,76 @@
+<configuration>
+    <!-- 引用 Spring Boot 的 logback 基础配置 -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <conversionRule conversionWord="threadId"
+                    converterClass="com.progartisan.component.spring.LogbackThreadIdConvensionRule"/>
+    <property name="PATTERN_TRADITIONAL"
+              value="%d{dd/HH:mm:ss.SSS} %-5level[%15.-15logger{0}-%-4.-4threadId] - %msg %n"/>
+    <!-- 控制台 Appender -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">　
+        <encoder>　　　　
+                <pattern>${PATTERN_TRADITIONAL}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 文件 Appender -->
+    <!-- 参考 Spring Boot 的 file-appender.xml 编写 -->
+    <appender name="FILE"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>　　　　
+            <pattern>${PATTERN_TRADITIONAL}</pattern>
+        </encoder>
+        <!-- 日志文件名 -->
+        <file>${LOG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 滚动后的日志文件名 -->
+            <fileNamePattern>${LOGBACK_ROLLINGPOLICY_FILE_NAME_PATTERN:-${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz}</fileNamePattern>
+            <!-- 启动服务时，是否清理历史日志，一般不建议清理 -->
+            <cleanHistoryOnStart>${LOGBACK_ROLLINGPOLICY_CLEAN_HISTORY_ON_START:-false}</cleanHistoryOnStart>
+            <!-- 日志文件，到达多少容量，进行滚动 -->
+            <maxFileSize>${LOGBACK_ROLLINGPOLICY_MAX_FILE_SIZE:-10MB}</maxFileSize>
+            <!-- 日志文件的总大小，0 表示不限制 -->
+            <totalSizeCap>${LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP:-0}</totalSizeCap>
+            <!-- 日志文件的保留天数 -->
+            <maxHistory>${LOGBACK_ROLLINGPOLICY_MAX_HISTORY:-30}</maxHistory>
+        </rollingPolicy>
+    </appender>
+    <!-- 异步写入日志，提升性能 -->
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 不丢失日志。默认的，如果队列的 80% 已满,则会丢弃 TRACT、DEBUG、INFO 级别的日志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度，该值会影响性能。默认值为 256 -->
+        <queueSize>256</queueSize>
+        <appender-ref ref="FILE"/>
+    </appender>
+
+    <appender name="AUDIT" class="ch.qos.logback.core.FileAppender">
+        <file>logs/audit.log</file>
+        <encoder>
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="AuditLogger" level="INFO" additivity="false">
+        <appender-ref ref="AUDIT"/>
+    </logger>
+
+    <!-- 本地环境 -->
+    <springProfile name="local">
+        <root level="INFO">
+            <appender-ref ref="STDOUT"/>
+            <!--  appender-ref ref="GRPC"/ --> <!-- 本地环境下，如果不想接入 SkyWalking 日志服务，可以注释掉本行 -->
+            <appender-ref ref="ASYNC"/>  <!-- 本地环境下，如果不想打印日志，可以注释掉本行 -->
+        </root>
+        <logger name="org.springframework" level="DEBUG"/>
+    </springProfile>
+    <!-- 其它环境 -->
+    <springProfile name="dev,test,test-local,default">
+        <root level="INFO">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="ASYNC"/>
+        </root>
+        <logger name="com.progartisan" level="DEBUG"/>
+        <logger name="com.gitee.sunchenbin" level="DEBUG"/>
+        <logger name="org.springframework" level="DEBUG"/>
+        <logger name="org.springframework.jdbc.core" level="DEBUG"/>
+    </springProfile>
+
+</configuration>

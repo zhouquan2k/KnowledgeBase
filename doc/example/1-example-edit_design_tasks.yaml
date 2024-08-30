@@ -1,0 +1,106 @@
+projectName: knowledgebase
+artifacts:
+  - moduleType: backend
+    moduleName: example
+    artifactType: api
+    artifactName: api/ExampleService.java
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      定义处理example数据的API接口，包括以下方法：
+      - getExamples: 获取example列表
+      - getExample: 获取单个example的详情
+      - saveExample: 新建/更新example
+      - deleteExample: 删除example
+      - getAssistants: 获取assistant列表
+
+  - moduleType: backend
+    moduleName: example
+    artifactType: domain
+    artifactName: model/Example.java
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      新增example的DomainEntity
+      - 属性包括exampleId, assistantId, inputText, outputText
+
+  - moduleType: backend
+    moduleName: example
+    artifactType: domain
+    artifactName: model/Assistant.java
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+        新增assistant的DomainEntity
+        - 属性包括assistantId, assistantName, Description, systemText
+
+  - moduleType: frontend
+    moduleName: example
+    artifactType: api_js
+    artifactName: example_api.js
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      新增处理example数据的前端API调用
+      - 包括调用保存、查询、删除example的接口
+
+  - moduleType: frontend
+    moduleName: example
+    artifactType: ui_vue
+    artifactName: example.vue
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      新增example管理的UI组件，包括example列表和example详情的新增、编辑表单
+      - UI结构
+        - 左侧example列表：显示所有example的列表，每行包括详情和删除按钮。顶部工具栏：包含“新建example”按钮
+        - 右侧example详情：显示当前选择的example详情，包括上方基本信息和下方输入输出文本的Tab页
+      - UI交互
+        - 用户点击“新建example”按钮，在右侧显示新建example页面
+        - 用户点击某行的详情按钮，在右侧显示编辑example页面
+        - 用户点击某行的删除按钮，删除该条example，并刷新列表
+        - 用户选择assistor，编辑输入文本和输出文本，用户点击“保存”按钮，保存当前example并返回列表界面
+
+  - moduleType: backend
+    moduleName: example
+    artifactType: mapper
+    artifactName: infra/ExampleMapper.java
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      新增example的Mapper接口
+      - 查询所有example: queryExamples
+      - 查询所有assistants: queryAssistants
+
+  - moduleType: backend
+    moduleName: example
+    artifactType: mapper_xml
+    artifactName: infra/ExampleMapper.xml
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      提供example相关的SQL语句
+      - 查询所有example: queryExamples
+      - 查询所有assistants: queryAssistants
+
+  - moduleType: backend
+    moduleName: example
+    artifactType: service_impl
+    artifactName: model/ExampleServiceImpl.java
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      实现example数据的业务逻辑，包括处理保存、查询、删除example的请求
+      - 查询所有example: queryExamples
+      - 查询单个example详情: getExample
+      - 保存example: saveExample
+      - 删除example: deleteExample
+      - 查询所有assistant: queryAssistants

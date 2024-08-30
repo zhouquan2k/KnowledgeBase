@@ -1,0 +1,3 @@
+总体设计上将业务实现分为以下⼏个业务模块(package)：
+- example： 用于fine tuning的example管理
+- knowledge：用于生成AI所需的背景知识，主要用于prompt/instruction。

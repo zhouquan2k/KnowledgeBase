@@ -1,0 +1,20 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.progartisan</groupId>
+    <artifactId>WebApp-parent</artifactId>
+    <version>0.4-SNAPSHOT</version>
+  </parent>
+  <artifactId>KnowledgeBase</artifactId>
+  <version>0.1-SNAPSHOT</version>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.progartisan.module</groupId>
+      <artifactId>System</artifactId>
+      <version>${MyModule-version}</version>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+</project>

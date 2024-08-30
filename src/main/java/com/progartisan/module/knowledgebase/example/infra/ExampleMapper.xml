@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.progartisan.module.knowledgebase.example.infra.ExampleMapper">
+    <resultMap id="Example" type="com.progartisan.module.knowledgebase.example.model.Example" autoMapping="true">
+        <id property="exampleId" column="example_id"/>
+    </resultMap>
+    <resultMap id="Assistant" type="com.progartisan.module.knowledgebase.example.model.Assistant" autoMapping="true">
+        <id property="assistantId" column="assistant_id"/>
+    </resultMap>
+
+    <!-- 查询所有example -->
+    <select id="queryExamples" resultMap="Example">
+        select * from example
+        where 1 = 1
+        <if test="params.assistantId != null">
+            and assistant_id = #{params.assistantId}
+        </if>
+    </select>
+
+    <!-- 查询所有assistants -->
+    <select id="queryAssistants" resultMap="Assistant">
+        select * from assistant
+    </select>
+</mapper>

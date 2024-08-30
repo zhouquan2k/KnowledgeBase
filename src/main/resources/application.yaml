@@ -1,0 +1,144 @@
+server:
+  port: 58080
+
+spring:
+  application:
+    name: KnowledgeBase
+
+  profiles:
+    active: dev
+
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER # 解决 SpringFox 与 SpringBoot 2.6.x 不兼容的问题，参见 SpringFoxHandlerProviderBeanPostProcessor 类
+
+  # Jackson 配置项
+  jackson:
+    date-format: "yyyy-MM-dd HH:mm:ss"
+    default-property-inclusion: non_null
+    serialization:
+      #write-dates-as-timestamps: true # 设置 Date 的格式，使用时间戳
+      #write-date-timestamps-as-nanoseconds: false # 设置不使用 nanoseconds 的格式。例如说 1611460870.401，而是直接 1611460870401
+      write-durations-as-timestamps: true # 设置 Duration 的格式，使用时间戳
+      fail-on-empty-beans: false # 允许序列化无属性的 Bean
+    deserialization:
+      fail-on-unknown-properties: false
+
+  # Cache 配置项
+  cache:
+    type: REDIS
+    redis:
+      time-to-live: 1h # 设置过期时间为 1 小时
+      
+  # 数据源配置项
+  autoconfigure:
+    exclude:
+      - com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure # 排除 Druid 的自动配置，使用 dynamic-datasource-spring-boot-starter 配置多数据源
+  datasource:
+    druid: # Druid 【监控】相关的全局配置
+      web-stat-filter:
+        enabled: true
+      stat-view-servlet:
+        enabled: true
+        allow: # 设置白名单，不填则允许所有访问
+        url-pattern: /druid/*
+        login-username: # 控制台管理用户名和密码
+        login-password:
+      filter:
+        stat:
+          enabled: true
+          log-slow-sql: true # 慢 SQL 记录
+          slow-sql-millis: 100
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
+    dynamic: # 多数据源配置
+      druid: # Druid 【连接池】相关的全局配置
+        initial-size: 5 # 初始连接数
+        min-idle: 10 # 最小连接池数量
+        max-active: 20 # 最大连接池数量
+        max-wait: 600000 # 配置获取连接等待超时的时间，单位：毫秒
+        time-between-eviction-runs-millis: 60000 # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位：毫秒
+        min-evictable-idle-time-millis: 300000 # 配置一个连接在池中最小生存的时间，单位：毫秒
+        max-evictable-idle-time-millis: 900000 # 配置一个连接在池中最大生存的时间，单位：毫秒
+        validation-query: SELECT 1 # 配置检测连接是否有效
+        test-while-idle: true
+        test-on-borrow: false
+        test-on-return: false
+      primary: master
+      datasource:
+        master:
+          url: jdbc:mysql://${app.database.host}:${app.database.port}/${app.database.database}?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&nullCatalogMeansCurrent=true&serverTimezone=${app.database.timezone}
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          username: ${app.database.username}
+          password: ${app.database.password}
+
+  # Redis 配置。Redisson 默认的配置足够使用，一般不需要进行调优
+  redis:
+    host: localhost # 地址
+    port: 6379 # 端口
+    database: 1 # 数据库索引
+#    password: 123456 # 密码，建议生产环境开启
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    call-setters-on-nulls: false
+    return-instance-for-empty-row: false
+
+debug: false
+
+# 日志文件配置
+logging:
+  level:
+    org.springframework: INFO
+    org.springframework.context.event: DEBUG
+  file:
+    name: logs/${spring.application.name}.log
+
+actable:
+  table:
+    auto: update  # add  # #none # update
+  model:
+    pack: com.progartisan
+  database:
+    type: mysql
+
+app:
+  # timezone: Asia/Shanghai # America/New_York  # TODO combine to this
+  timezone: America/New_York
+  basePackage: com.progartisan
+  database:
+    host: localhost
+    port: 3306
+    database: knowledgebase
+    username: root
+    password: rootroot
+    timezone: America/New_York  # UTC
+  component-features:
+    security-spring:   true
+    audit-log: true
+    operate-log:       true
+    web:               true
+    auto-create-table: true
+  security:
+    authenticated: false
+    testPassword: none
+  web:
+    json:
+      timezone: America/New_York
+    anonymousAccess: /api/security/login, /api/security/logout, /api/misc/**, /api/docs/**, /v3/api-docs/**, /v3/api-docs.yaml/**, /swagger-ui.html, /swagger-ui/**, /swagger-resources/**, /favicon.ico
+  user:
+    initialPassword: 12345678
+    
+  file:
+    local:
+      basePath: /Users/zhouquan/Downloads/file2
+      domain: http://127.0.0.1:48080
+
+  doc:
+    header: ""
+    backendBasePath: /Users/zhouquan/Workspace/Knowledge_Base/src/main/java/com/progartisan/module/knowledgebase
+    frontendBasePath: /Users/zhouquan/Workspace/Knowledge_Base/webfrontend/view
+
