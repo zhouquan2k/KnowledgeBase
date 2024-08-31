@@ -1,0 +1,109 @@
+projectName: knowledgebase
+artifacts:
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: api
+    artifactName: api/KnowledgeService.java
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      定义处理知识项和tag管理的API接口，包括：
+      - 保存知识项方法 saveKnowledge
+      - 查询知识项方法 queryKnowledge
+      - 获取tag匹配方法 getMatchedTags
+      - 创建tag方法 createTag
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: domain
+    artifactName: model/Knowledge.java
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      新增知识项的DomainEntity
+      - 包括知识项ID (knowledgeId)、标题 (title)、内容 (content)、标签列表 (tags)
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: domain
+    artifactName: model/Tag.java
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      新增标签的DomainEntity
+      - 包括标签ID (tagId)、标签名称 (name)、标签顺序 (order)
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: mapper
+    artifactName: infra/KnowledgeMapper.java
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      新增知识项的Mapper接口，
+      - 按tag查询知识项列表: queryKnowledgeByTag
+      - 按text查询tags：getMatchedTags
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: mapper_xml
+    artifactName: infra/KnowledgeMapper.xml
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      提供知识项相关的SQL语句, 
+      - 按tag查询知识项列表: queryKnowledgeByTag
+      - 按text查询tags：getMatchedTags
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: service_impl
+    artifactName: model/KnowledgeServiceImpl.java
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      实现知识项和tag管理的业务逻辑，包括：
+      - 保存知识项方法 saveKnowledge
+      - 查询知识项方法 queryKnowledge
+      - 获取tag匹配方法 getMatchedTags
+      - 创建tag方法 createTag
+
+  - moduleType: frontend
+    moduleName: knowledge
+    artifactType: api_js
+    artifactName: knowledge_api.js
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      新增处理知识项和tag管理的前端API调用
+      - 包括调用新增、查询、更新知识项的接口
+      - 调用获取tag匹配和创建tag的接口
+
+  - moduleType: frontend
+    moduleName: knowledge
+    artifactType: ui_vue
+    artifactName: knowledge.vue
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      新增知识管理的UI组件，包括知识项列表和知识项的新增、编辑表单。
+      - UI结构
+        - 知识项列表区域（左侧）：显示所有知识项的标题。
+        - 新建/编辑知识项表单区域（右侧）：包括标题输入框、内容输入框、tag输入框
+      - UI交互
+        - 用户登录后进入知识管理界面，显示知识项列表
+        - 用户点击“+”按钮，弹出新建知识项表单
+          - 用户输入标题和内容，点击“保存”按钮，系统保存知识项并自动添加默认tag "_knowledge"
+        - 用户在tag输入框中输入自定义tag，系统提供匹配已有tag的选择
+          - 如果输入的tag不存在，系统自动创建该tag
+        - 在左侧知识列表区域，系统显示所有的知识项列表
+        - 用户点击某个知识项的标题，在右侧显示该知识项的详细内容和编辑表单
+          - 用户可以修改标题、内容和tag，点击“保存”按钮保存修改

@@ -40,11 +40,11 @@
 
 ### 5.2 场景 开发模式知识库的整理
 目标：可以将开发模式知识低成本（时间、费用）的输出到AI
-- 知识的输入 P0
-- 知识的组织 P0: 多tag、层次分类
-- 输出成AI所需的PDF P0
-- 提供查询API：自己实现查询知识不通过AI P1
-- 查询时可选的加入:所有/部分父级知识。 P1
+- 知识的输入 【P0】，知识输入，知识打tag（相当于对tag的创建）
+- 知识的组织 【P0】: tag树展示和管理
+- 提供查询API：自己实现查询知识不通过AI 【P1】
+- 查询时可选的加入:所有/部分父级知识。 【P1】
+- 输出成AI所需的PDF 【P1】
 
 
 ### 5.3 场景 项目用到的 需求知识库 设计知识库
@@ -56,7 +56,7 @@
 - example：exampleID、assistantID、输入、输出
 - assistant：assistantID、system、
 - exmaple-tag:  exampleID、tagID
-- tag: tagID, tagName, parentTagID, 
+- tag: tagID, tagName/Path, order, 
 
 - knowledge: knowledgeID、title、content
 - knowledge-tag: knowledgeID、tagID

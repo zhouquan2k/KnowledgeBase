@@ -15,6 +15,12 @@ const Routes = [{
             path: 'examples',
             component: (resolve) => require(['@kb/view/example/example'], resolve)
         },
+        {
+            name: 'KB_Knowledge',
+            meta: { title: 'Knowledge' },
+            path: 'knowledge',
+            component: (resolve) => require(['@kb/view/knowledge/knowledge'], resolve)
+        }
     ]
 }];
 

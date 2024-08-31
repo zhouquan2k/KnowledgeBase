@@ -26,5 +26,10 @@ public class OpenApiConfig  {
         return OpenApiHelper.getGroupedOpenApi("example");
     }
 
+    @Bean
+    public GroupedOpenApi knowledgeApi() {
+        return OpenApiHelper.getGroupedOpenApi("knowledge");
+    }
+
 }
 

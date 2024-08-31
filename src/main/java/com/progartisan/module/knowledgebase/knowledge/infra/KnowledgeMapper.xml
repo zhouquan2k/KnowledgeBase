@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.progartisan.module.knowledgebase.knowledge.infra.KnowledgeMapper">
+    <resultMap id="KnowledgeTag" type="com.progartisan.module.knowledgebase.knowledge.model.Knowledge$KnowledgeTag" autoMapping="true">
+        <id property="id" column="id"/>
+        <association property="tag" resultMap="Tag" notNullColumn="tag_id"/>
+    </resultMap>
+    <resultMap id="Knowledge" type="com.progartisan.module.knowledgebase.knowledge.model.Knowledge" autoMapping="true">
+        <id property="knowledgeId" column="knowledge_id"/>
+        <collection property="tags" notNullColumn="tag_id" resultMap="KnowledgeTag"/>
+    </resultMap>
+    <resultMap id="Example" type="com.progartisan.module.knowledgebase.knowledge.model.Knowledge" extends="Knowledge">
+    </resultMap>
+    <resultMap id="Tag" type="com.progartisan.module.knowledgebase.knowledge.model.Tag" autoMapping="true">
+        <id property="tagId" column="tag_id"/>
+    </resultMap>
+
+    <!-- 按tag查询知识项列表 -->
+    <select id="queryKnowledgeByTag" resultMap="Knowledge">
+        select *
+        from knowledge k
+        left join knowledge_tag kt on k.knowledge_id = kt.knowledge_id
+        left join tag t on kt.tag_id = t.tag_id
+        <if test="tagName != null and tagName != ''">
+            where t.tag_name = #{tagName}
+        </if>
+    </select>
+
+    <!-- 按text查询tags -->
+    <select id="getMatchedTags" resultMap="Tag">
+        select *
+        from tag
+        where tag_name like CONCAT('%', #{text}, '%')
+    </select>
+</mapper>
