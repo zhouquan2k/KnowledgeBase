@@ -29,8 +29,11 @@
     - 可以作为Devartisan的案例（时间紧，不是重点）  
 - 2. ~~python + vue~~
 
-## 5. 需求分析
-### 5.1 场景 finetuning example的整理
+## 5. 用户
+知识库用户
+
+## 6. 需求分析
+### 6.1 场景 finetuning example的整理
 名称：example
 目标：为实现finetuning，提供example管理
 - example-edit 【P0】输入/查看 
@@ -38,7 +41,7 @@
 - example-export【P0】输出成训练格式的文本 P0
 - example-tag 【P1】tag分类 可先实现单个的、平面的分类：如按assistor分类
 
-### 5.2 场景 开发模式知识库的整理
+### 6.2 场景 开发模式知识库的整理
 目标：可以将开发模式知识低成本（时间、费用）的输出到AI
 - 知识的输入 【P0】，知识输入，知识打tag（相当于对tag的创建）
 - 知识的组织 【P0】: tag树展示和管理
@@ -47,11 +50,11 @@
 - 输出成AI所需的PDF 【P1】
 
 
-### 5.3 场景 项目用到的 需求知识库 设计知识库
+### 6.3 场景 项目用到的 需求知识库 设计知识库
 目标： 积累、管理AI生成的制品，并在后续的开发过程中作为上下文使用。
 - TODO
 
-## 6 设计
+## 7 设计
 ### 实体
 - example：exampleID、assistantID、输入、输出
 - assistant：assistantID、system、

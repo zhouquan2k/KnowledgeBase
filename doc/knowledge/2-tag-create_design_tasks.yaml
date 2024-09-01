@@ -1,0 +1,102 @@
+projectName: knowledgebase
+artifacts:
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: api
+    artifactName: api/KnowledgeService.java
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      定义处理知识项标签的API接口，包括：
+      - 为知识项添加标签的方法 addTagToKnowledge
+      - 从知识项中删除标签的方法 removeTagFromKnowledge
+      - 获取知识项详情 getKnowledge
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: domain
+    artifactName: model/Knowledge.java
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription:
+        - 新增方法 addTag 和 removeTag，用于添加和删除标签
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: domain
+    artifactName: model/Tag.java
+    needChange: false
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription:
+
+  - moduleType: frontend
+    moduleName: knowledge
+    artifactType: api_js
+    artifactName: knowledge_api.js
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      新增处理知识项标签的前端API调用，包括：
+      - 调用新增标签到知识项的接口 addTagToKnowledge
+      - 调用从知识项中删除标签的接口 removeTagFromKnowledge
+      - 获取知识项详情 getKnowledge
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: mapper
+    artifactName: infra/KnowledgeMapper.java
+    needChange: false
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription:
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: mapper_xml
+    artifactName: infra/KnowledgeMapper.xml
+    needChange: false
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription:
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: service_impl
+    artifactName: model/KnowledgeServiceImpl.java
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      实现知识项标签的业务逻辑，包括：
+      - 为知识项添加标签的方法 addTagToKnowledge，当tag不存在时，需要调用createTag方法创建一个新的tag
+      - 从知识项中删除标签的方法 removeTagFromKnowledge
+      - 获取知识项详情 getKnowledge
+
+  - moduleType: frontend
+    moduleName: knowledge
+    artifactType: ui_vue
+    artifactName: knowledge.vue
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      调用新增标签到知识项的接口 addTagToKnowledge，
+      调用从知识项中删除标签的接口 removeTagFromKnowledge
+      修改知识管理的UI组件，添加标签输入框和下拉列表组件，支持标签的输入和选择。
+      - UI结构
+        - 知识项详情页面
+          - 知识当前所有Tag显示区域
+            - 编辑按钮：点击后为每个tag显示删除按钮
+            - Tag列表
+              - Tag
+                - 删除按钮
+      - UI交互
+        - 用户登录系统，进入知识管理界面，显示知识项列表
+        - 用户点击某个知识项，进入知识项详情页面，显示知识项的标题和内容
+        - 用户在Tag输入框中输入部分Tag名称，系统实时匹配已有的Tag并显示匹配结果
+        - 用户从匹配结果中选择一个Tag，或输入一个不存在的Tag
+        - 用户在知识项的tag显示区域点击tag编辑按钮，在每个tag上显示删除按钮，点击删除按钮删除tag

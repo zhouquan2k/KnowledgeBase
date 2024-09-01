@@ -29,11 +29,25 @@ export default class KnowledgeApi {
         });
     }
 
-    async createTag(tag) {
+    async addTagToKnowledge(knowledgeId, tag) {
         return await request({
-            url: `${this.baseUrl}/tags`,
+            url: `${this.baseUrl}/${knowledgeId}/tags`,
             method: 'post',
             data: tag
+        });
+    }
+
+    async removeTagFromKnowledge(knowledgeId, tagId) {
+        return await request({
+            url: `${this.baseUrl}/${knowledgeId}/tags/${tagId}`,
+            method: 'delete'
+        });
+    }
+
+    async getKnowledge(knowledgeId) {
+        return await request({
+            url: `${this.baseUrl}/${knowledgeId}`,
+            method: 'get'
         });
     }
 };

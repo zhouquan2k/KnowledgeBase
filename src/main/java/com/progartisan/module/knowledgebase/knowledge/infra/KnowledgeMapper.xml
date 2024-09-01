@@ -14,6 +14,13 @@
     <resultMap id="Tag" type="com.progartisan.module.knowledgebase.knowledge.model.Tag" autoMapping="true">
         <id property="tagId" column="tag_id"/>
     </resultMap>
+    <select id="getKnowledge" resultMap="Knowledge">
+        select *
+        from knowledge k
+        left join knowledge_tag kt on k.knowledge_id = kt.knowledge_id
+        left join tag t on kt.tag_id = t.tag_id
+        where k.knowledge_id = #{knowledgeId}
+    </select>
 
     <!-- 按tag查询知识项列表 -->
     <select id="queryKnowledgeByTag" resultMap="Knowledge">

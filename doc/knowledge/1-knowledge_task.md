@@ -8,3 +8,6 @@
 ### 业务对象
 - Knowledge知识：knowledgeId, title, content
 - KnowledgeTag：knowledgeId, tagId
+
+### TODO
+这个需求太大，应该把tag创建分离到新的需求中。

@@ -8,7 +8,7 @@ import com.progartisan.component.framework.helper.EntityHelper;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 import static com.progartisan.component.meta.Meta.BooleanEx.False;
@@ -61,5 +61,19 @@ public class Knowledge extends BaseEntity<Knowledge> {
     @Override
     public void update(Knowledge knowledge) {
         entityHelper.update(this, knowledge);
+    }
+
+    public void addTag(Tag tag) {
+        if (tags == null) {
+            tags = new HashSet<>();
+        }
+        KnowledgeTag knowledgeTag = KnowledgeTag.builder().tagId(tag.getTagId()).knowledgeId(this.knowledgeId).build();
+        tags.add(knowledgeTag);
+    }
+
+    public void removeTag(String tagId) {
+        if (tags != null) {
+            tags.removeIf(tag -> tag.getTagId().equals(tagId));
+        }
     }
 }

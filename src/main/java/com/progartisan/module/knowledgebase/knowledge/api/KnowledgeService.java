@@ -12,6 +12,9 @@ public interface KnowledgeService {
     @PostMapping
     Knowledge saveKnowledge(@RequestBody Knowledge knowledge);
 
+    @GetMapping("/{knowledgeId}")
+    Knowledge getKnowledge(@PathVariable String knowledgeId);
+
     @GetMapping
     List<Knowledge> queryKnowledge(@RequestParam(required = false) String tag);
 
@@ -20,4 +23,10 @@ public interface KnowledgeService {
 
     @PostMapping("/tags")
     Tag createTag(@RequestBody Tag tag);
+
+    @PostMapping("/{knowledgeId}/tags")
+    Knowledge addTagToKnowledge(@PathVariable String knowledgeId, @RequestBody Tag tag);
+
+    @DeleteMapping("/{knowledgeId}/tags/{tagId}")
+    Knowledge removeTagFromKnowledge(@PathVariable String knowledgeId, @PathVariable String tagId);
 }

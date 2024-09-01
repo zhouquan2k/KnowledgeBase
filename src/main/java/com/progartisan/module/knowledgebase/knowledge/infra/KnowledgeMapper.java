@@ -16,4 +16,6 @@ public interface KnowledgeMapper extends BaseMapper<Knowledge> {
 
     // 按text查询tags
     List<Tag> getMatchedTags(String text);
+
+    Knowledge getKnowledge(String knowledgeId);
 }

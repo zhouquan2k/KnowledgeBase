@@ -7,6 +7,9 @@
 - 直接向AI提供知识检索：面向程序。节省AI检索的token
 - 可用于整理AI fine tuning的example数据
 
+## 用户
+知识库用户
+
 ##  需求分析
 ###  场景 finetuning example的整理
 名称：example

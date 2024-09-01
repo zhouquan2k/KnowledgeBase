@@ -4,7 +4,7 @@
       <el-button type="success" plain icon="el-icon-plus" @click="onAddKnowledge"></el-button>
       <el-input placeholder="搜索知识项" v-model="searchText" @input="fetchKnowledge"
         style="width:120px;margin-left:5px"></el-input>
-      <el-menu :default-active="activeKnowledgeId" @select="onSelectKnowledge">
+      <el-menu :default-active="activeKnowledgeId" @select="refreshKnowledge">
         <el-menu-item v-for="knowledge in knowledgeList" :key="knowledge.knowledgeId" :index="knowledge.knowledgeId">
           {{ knowledge.title }}
         </el-menu-item>
@@ -20,18 +20,21 @@
           <el-input v-model="currentKnowledge.title"></el-input>
         </el-form-item>
         <el-form-item label="标签">
-          <el-tag v-for="tag in currentKnowledge.tags" :key="tag.tagId">{{ tag.tag.tagName }}</el-tag>
-          <el-button size="mini" icon="el-icon-plus" type="success" plain circle @click="showTagSelection = true"
-            style="margin-left: 5px;"></el-button>
-          <el-select v-if="showTagSelection" v-model="currentKnowledge.tags" filterable remote allow-create
-            :remote-method="fetchTags" placeholder=" " @change="onSelectTag">
-            <el-option v-for="tag in tagOptions" :key="tag.tagId" :label="tag.name" :value="tag"></el-option>
+          <el-tag v-for="tag in currentKnowledge.tags" :key="tag.tagId" style="margin-right:5px;">
+            {{ tag.tag.tagName }}
+            <el-button type="text" size="mini" icon="el-icon-close" @click="removeTag(tag.tagId)"></el-button>
+          </el-tag>
+          <el-button v-if="!showTagSelection" size="mini" icon="el-icon-plus" type="success" plain circle
+            @click="showTagSelection = true;" style="margin-left: 5px;"></el-button>
+          <el-select ref="tagSelect" v-if="showTagSelection" v-model="newTag" filterable remote allow-create
+            default-first-option :remote-method="fetchTags" placeholder=" " @change="onSelectTag"
+            @blur="showTagSelection = false">
+            <el-option v-for="tag in tagOptions" :key="tag.tagId" :label="tag.tagName" :value="tag"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="内容">
           <el-input type="textarea" v-model="currentKnowledge.content" :rows="25"></el-input>
         </el-form-item>
-
       </el-form>
     </el-main>
   </el-container>
@@ -53,8 +56,18 @@ export default {
       tagOptions: [],
       searchText: '',
       activeKnowledgeId: '',
-      showTagSelection: false
+      showTagSelection: false,
+      newTag: ''
     };
+  },
+  watch: {
+    showTagSelection(newVal) {
+      if (newVal) {
+        this.$nextTick(() => {
+          this.$refs.tagSelect.focus();
+        });
+      }
+    },
   },
   methods: {
     async fetchKnowledge() {
@@ -68,14 +81,21 @@ export default {
       }
     },
     onAddKnowledge() {
-      this.currentKnowledge = {
-        tags: []
-      };
-      this.activeKnowledgeId = '';
+      this.currentKnowledge = { tags: [] };
+      this.activeKnowledgeId = null;
+    },
+    async refreshKnowledge(knowledgeId) {
+      this.currentKnowledge = await knowledgeApi.getKnowledge(knowledgeId);
+      this.activeKnowledgeId = knowledgeId;
     },
     async onSelectTag(selectedValue) {
-      await knowledgeApi.addTagToKnowledge(this.currentKnowledge.knowledgeId, (selectedValue.tagId) ? selectedValue.tagId : selectedValue);
+      await knowledgeApi.addTagToKnowledge(this.currentKnowledge.knowledgeId, (selectedValue.tagId) ? selectedValue : { tagName: selectedValue });
       this.showTagSelection = false;
+      this.refreshKnowledge(this.currentKnowledge.knowledgeId);
+    },
+    async removeTag(tagId) {
+      await knowledgeApi.removeTagFromKnowledge(this.currentKnowledge.knowledgeId, tagId);
+      this.refreshKnowledge(this.currentKnowledge.knowledgeId);
     },
     async saveKnowledge() {
       await knowledgeApi.saveKnowledge(this.currentKnowledge);
@@ -122,5 +142,9 @@ export default {
 
 .el-button--mini.is-circle {
   padding: 3px;
+}
+
+.el-tag .el-button--mini {
+  padding: 0px;
 }
 </style>
