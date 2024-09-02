@@ -13,11 +13,11 @@ export default class KnowledgeApi {
         });
     }
 
-    async queryKnowledge(tag) {
+    async queryKnowledge(tagId) {
         return await request({
             url: `${this.baseUrl}`,
             method: 'get',
-            params: { tag }
+            params: { tagId }
         });
     }
 
@@ -48,6 +48,28 @@ export default class KnowledgeApi {
         return await request({
             url: `${this.baseUrl}/${knowledgeId}`,
             method: 'get'
+        });
+    }
+
+    async getTagTree() {
+        return await request({
+            url: `${this.baseUrl}/tags/tree`,
+            method: 'get'
+        });
+    }
+
+    async updateTag(tagId, tag) {
+        return await request({
+            url: `${this.baseUrl}/tags/${tagId}`,
+            method: 'put',
+            data: tag
+        });
+    }
+
+    async deleteTag(tagId) {
+        return await request({
+            url: `${this.baseUrl}/tags/${tagId}`,
+            method: 'delete'
         });
     }
 };

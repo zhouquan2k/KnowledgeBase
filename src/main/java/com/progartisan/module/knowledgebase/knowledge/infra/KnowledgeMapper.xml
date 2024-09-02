@@ -14,6 +14,10 @@
     <resultMap id="Tag" type="com.progartisan.module.knowledgebase.knowledge.model.Tag" autoMapping="true">
         <id property="tagId" column="tag_id"/>
     </resultMap>
+    <resultMap id="TagWithParent" type="com.progartisan.module.knowledgebase.knowledge.model.Tag" autoMapping="true">
+        <id property="tagId" column="tag_id"/>
+        <association property="parent" resultMap="Tag" notNullColumn="tag_id" columnPrefix="_parent_"/>
+    </resultMap>
     <select id="getKnowledge" resultMap="Knowledge">
         select *
         from knowledge k
@@ -27,9 +31,8 @@
         select *
         from knowledge k
         left join knowledge_tag kt on k.knowledge_id = kt.knowledge_id
-        left join tag t on kt.tag_id = t.tag_id
-        <if test="tagName != null and tagName != ''">
-            where t.tag_name = #{tagName}
+        <if test="tagId != null and tagId != ''">
+            where kt.tag_id = #{tagId}
         </if>
     </select>
 
@@ -38,5 +41,31 @@
         select *
         from tag
         where tag_name like CONCAT('%', #{text}, '%')
+    </select>
+
+    <!-- 按tagPath和order顺序获取标签树数据 -->
+    <select id="queryTagTree" resultMap="Tag">
+        select *
+        from tag
+        order by parent_tag_id, `order`
+    </select>
+
+    <!-- 批量删除某个tagId的所有知识-标签 -->
+    <delete id="removeTagFromAllKnowledge">
+        delete from knowledge_tag
+        where tag_id = #{tagId}
+    </delete>
+
+    <select id="getChildrenTags" resultMap="Tag">
+        select *
+        from tag
+        where parent_tag_id = #{tagId}
+    </select>
+
+    <select id="getTag" resultMap="TagWithParent">
+        select t.*, p.tag_name as _parent_tag_name, p.full_path as _parent_full_path, p.tag_id as _parent_tag_id, p.parent_tag_id as _parent_parent_tag_id
+        from tag t
+        left join tag p on t.parent_tag_id = p.tag_id
+        where t.tag_id = #{tagId}
     </select>
 </mapper>

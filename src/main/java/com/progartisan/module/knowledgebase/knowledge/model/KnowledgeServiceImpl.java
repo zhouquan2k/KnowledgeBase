@@ -47,8 +47,8 @@ public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements
 
     @Override
     @Query
-    public List<Knowledge> queryKnowledge(String tag) {
-        return knowledgeMapper.queryKnowledgeByTag(tag);
+    public List<Knowledge> queryKnowledge(String tagId) {
+        return knowledgeMapper.queryKnowledgeByTag(tagId);
     }
 
     @Override
@@ -60,6 +60,19 @@ public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements
     @Override
     @Command
     public Tag createTag(Tag tag) {
+        if (tag.getTagName().indexOf('/') >=0) {
+            // 分段构建tag
+            String[] segments = tag.getTagName().split("/");
+            Tag lastParent = tag.getParent();
+            Tag newTag = null;
+            for (var segment : segments) {
+                tag = Tag.builder().tagName(segment).parentTagId(lastParent.getTagId()).parent(lastParent).build();
+                newTag = tagRepository.create(tag);
+                newTag = (Tag)tagRepository.save(newTag);
+                lastParent = newTag;
+            }
+            return newTag;
+        }
         var newTag = tagRepository.create(tag);
         return (Tag)tagRepository.save(newTag);
     }
@@ -72,7 +85,7 @@ public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements
         if (Util.isEmpty(tag.getTagId())) {
             theTag = createTag(tag);
         }
-        else {
+        else { // reuse a tag exist
             theTag = tagRepository.get(tag.getTagId()).orElseThrow();
         }
         knowledge.addTag(theTag);
@@ -85,5 +98,40 @@ public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements
         Knowledge knowledge = knowledgeRepository.get(knowledgeId).orElseThrow();
         knowledge.removeTag(tagId);
         return (Knowledge) knowledgeRepository.save(knowledge);
+    }
+
+    @Override
+    @Query
+    public List<Tag> getTagTree() {
+        return knowledgeMapper.queryTagTree();
+    }
+
+    @Override
+    @Command
+    public Tag updateTag(String tagId, Tag tag) {
+        // Tag existingTag = tagRepository.get(tagId).orElseThrow();
+        Tag existingTag = knowledgeMapper.getTag(tagId);
+        existingTag.rename(tag.getTagName());
+        var returnTag = (Tag) tagRepository.save(existingTag);
+        this.updateChildrenFullPath(existingTag);
+        return returnTag;
+    }
+
+    private void updateChildrenFullPath(Tag tag) {
+        List<Tag> children = knowledgeMapper.getChildrenTags(tag.getTagId());
+        for (Tag child : children) {
+            var theTag = knowledgeMapper.getTag(child.getTagId());
+            theTag.calculate();
+            tagRepository.save(theTag);
+            updateChildrenFullPath(child);
+        }
+    }
+
+    @Override
+    @Command
+    public void deleteTag(String tagId) {
+        Tag tag = tagRepository.get(tagId).orElseThrow();
+        knowledgeMapper.removeTagFromAllKnowledge(tagId);
+        tagRepository.remove(tagId);
     }
 }

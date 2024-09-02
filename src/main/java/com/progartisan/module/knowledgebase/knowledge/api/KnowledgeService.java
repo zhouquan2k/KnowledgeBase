@@ -16,7 +16,7 @@ public interface KnowledgeService {
     Knowledge getKnowledge(@PathVariable String knowledgeId);
 
     @GetMapping
-    List<Knowledge> queryKnowledge(@RequestParam(required = false) String tag);
+    List<Knowledge> queryKnowledge(@RequestParam(required = false) String tagId);
 
     @GetMapping("/tags")
     List<Tag> getMatchedTags(@RequestParam String text);
@@ -29,4 +29,13 @@ public interface KnowledgeService {
 
     @DeleteMapping("/{knowledgeId}/tags/{tagId}")
     Knowledge removeTagFromKnowledge(@PathVariable String knowledgeId, @PathVariable String tagId);
+
+    @GetMapping("/tags/tree")
+    List<Tag> getTagTree();
+
+    @PutMapping("/tags/{tagId}")
+    Tag updateTag(@PathVariable String tagId, @RequestBody Tag tag);
+
+    @DeleteMapping("/tags/{tagId}")
+    void deleteTag(@PathVariable String tagId);
 }

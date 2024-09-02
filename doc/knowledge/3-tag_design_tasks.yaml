@@ -1,0 +1,89 @@
+projectName: knowledgebase
+artifacts:
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: api
+    artifactName: api/KnowledgeService.java
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      定义处理标签事务的API接口，包括按
+      - 获取标签树方法 getTagTree
+      - 更新标签方法 updateTag
+      - 删除标签方法 deleteTag
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: domain
+    artifactName: model/Tag.java
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      新增标签的DomainEntity
+      - 包括标签ID、标签名称、标签路径、标签顺序。
+
+  - moduleType: frontend
+    moduleName: knowledge
+    artifactType: api_js
+    artifactName: knowledge_api.js
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      新增处理标签事务的前端API调用
+      - 包括调用新增、查询、更新、删除标签的接口。
+
+  - moduleType: frontend
+    moduleName: knowledge
+    artifactType: ui_vue
+    artifactName: tag_tree.vue
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      新增标签管理的UI组件，包括标签树展示和标签的新增、编辑、删除功能。
+      - UI结构
+        - 标签树展示区：显示按tagPath和order顺序排列的标签树，每个标签行上有一个编辑图标和一个删除图标
+      - UI交互
+        - 用户登录后进入标签管理界面，系统按tagPath和order顺序展示标签树
+        - 用户点击某个标签旁边的编辑图标，标签名称变为可编辑状态，用户修改名称后失去焦点或按下回车键时，系统自动保存并刷新标签树
+        - 用户点击某个标签旁边的删除图标，系统弹出确认删除对话框，用户确认后系统删除该标签，并移除所有使用该标签的知识项中的该标签
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: mapper
+    artifactName: infra/KnowledgeMapper.java
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      新增标签的Mapper接口，
+      - 按tagPath和order顺序获取标签树数据: queryTagTree。
+      - 批量删除某个tagId的所有知识-标签：removeTagFromAllKnowledge
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: mapper_xml
+    artifactName: infra/KnowledgeMapper.xml
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      提供标签相关的SQL语句, 
+      - 按tagPath和order顺序获取标签树数据: queryTagTree。
+      - 批量删除某个tagId的所有知识-标签：removeTagFromAllKnowledge
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: service_impl
+    artifactName: model/KnowledgeServiceImpl.java
+    needChange: true
+    referenceDocs: []
+    referenceArtifacts: []
+    artifactDescription: >
+      实现标签事务的业务逻辑，包括处理新增、查询、更新、删除标签的请求。
+      - 获取标签树方法 getTagTree
+      - 更新标签方法 updateTag
+      - 删除标签方法 deleteTag, 需要调用
