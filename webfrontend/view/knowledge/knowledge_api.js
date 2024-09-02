@@ -74,11 +74,11 @@ export default class KnowledgeApi {
         });
     }
 
-    async moveTag(tagId, parentTagId) {
+    async moveTag(tagId, moveType, refTagId) {
         return await request({
-            url: `${this.baseUrl}/tags/${tagId}/move`,
+            url: `${this.baseUrl}/tags/${tagId}/move/${moveType[0].toUpperCase() + moveType.slice(1)}`,
             method: 'put',
-            data: { parentTagId }
+            data: { tagId: refTagId }
         });
     }
 

@@ -63,7 +63,7 @@ public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements
     @Override
     @Command
     public Tag createTag(Tag tag) {
-        if (tag.getTagName().indexOf('/') >=0) {
+        if (tag.getTagName().indexOf('/') >= 0) {
             // 分段构建tag
             String[] segments = tag.getTagName().split("/");
             Tag lastParent = tag.getParent();
@@ -71,13 +71,13 @@ public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements
             for (var segment : segments) {
                 tag = Tag.builder().tagName(segment).parentTagId(lastParent.getTagId()).parent(lastParent).build();
                 newTag = tagRepository.create(tag);
-                newTag = (Tag)tagRepository.save(newTag);
+                newTag = (Tag) tagRepository.save(newTag);
                 lastParent = newTag;
             }
             return newTag;
         }
         var newTag = tagRepository.create(tag);
-        return (Tag)tagRepository.save(newTag);
+        return (Tag) tagRepository.save(newTag);
     }
 
     @Override
@@ -87,8 +87,7 @@ public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements
         Tag theTag = null;
         if (Util.isEmpty(tag.getTagId())) {
             theTag = createTag(tag);
-        }
-        else { // reuse a tag exist
+        } else { // reuse a tag exist
             theTag = tagRepository.get(tag.getTagId()).orElseThrow();
         }
         knowledge.addTag(theTag);
@@ -120,16 +119,6 @@ public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements
         return returnTag;
     }
 
-    private void updateChildrenFullPath(Tag tag) {
-        List<Tag> children = knowledgeMapper.getChildrenTags(tag.getTagId());
-        for (Tag child : children) {
-            var theTag = knowledgeMapper.getTag(child.getTagId());
-            theTag.calculate();
-            tagRepository.save(theTag);
-            updateChildrenFullPath(child);
-        }
-    }
-
     @Override
     @Command
     public void deleteTag(String tagId) {
@@ -140,13 +129,26 @@ public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements
 
     @Override
     @Command
-    public Tag moveTag(String tagId, Tag tag) {
+    public void moveTag(String tagId, MoveType moveType, Tag refInputTag) {
         Tag existingTag = tagRepository.get(tagId).orElseThrow();
-        var newParent = tagRepository.get(tag.getParentTagId()).orElseThrow();
-        existingTag.moveAsChild(newParent);
-        var returnTag = (Tag) tagRepository.save(existingTag);
-        this.updateChildrenFullPath(existingTag);
-        return returnTag;
+        var refTag = tagRepository.get(refInputTag.getTagId()).orElseThrow();
+        var parentTag = moveType == MoveType.Inner ? refTag : tagRepository.get(refTag.getParentTagId()).orElseThrow();
+        existingTag.move(moveType, refTag);
+        tagRepository.save(existingTag);
+        this.updateChildrenFullPath(parentTag);
+    }
+
+    // adjust order and full path
+    private void updateChildrenFullPath(Tag tag) {
+        List<Tag> children = knowledgeMapper.getChildrenTags(tag.getTagId());
+        for (int i = 0; i < children.size(); i++) {
+            var child = children.get(i);
+            var theTag = knowledgeMapper.getTag(child.getTagId());
+            theTag.resetOrder((i + 1) * 10);
+            theTag.calculate();
+            tagRepository.save(theTag);
+            updateChildrenFullPath(child);
+        }
     }
 
     @Override

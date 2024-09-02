@@ -46,8 +46,15 @@
             <el-button slot="append" icon="el-icon-close" @click="showTagSelection = false; newTag = null;"></el-button>
           </el-input>
         </el-form-item>
-        <el-form-item label="内容">
-          <el-input type="textarea" v-model="currentKnowledge.content" :rows="25"></el-input>
+        <el-form-item class="content">
+          <el-tabs v-model="activeTab">
+            <el-tab-pane label="Markdown" name="markdown">
+              <div class="markdown" v-html="renderedMarkdown"></div>
+            </el-tab-pane>
+            <el-tab-pane label="编辑" name="edit">
+              <el-input type="textarea" v-model="currentKnowledge.content" :rows="25"></el-input>
+            </el-tab-pane>
+          </el-tabs>
         </el-form-item>
       </el-form>
     </el-main>
@@ -58,6 +65,7 @@
 import { knowledgeApi } from './knowledge_api';
 import Splitter from '@/components/splitter.vue';
 import TagTree from './tag_tree.vue';
+import { marked } from 'marked';
 
 export default {
   components: {
@@ -73,8 +81,14 @@ export default {
       activeTag: null,
       showTagSelection: false,
       newTag: '',
-      parentTag: null
+      parentTag: null,
+      activeTab: 'markdown'
     };
+  },
+  computed: {
+    renderedMarkdown() {
+      return marked(this.currentKnowledge?.content || '');
+    }
   },
   methods: {
     onTagTreeSelected(tag) {
@@ -175,5 +189,24 @@ export default {
 
 .el-tag .el-button--mini {
   padding: 0px;
+}
+
+.content ::v-deep .el-form-item__content {
+  margin-left: 10px !important;
+  line-height: 1.0 !important;
+}
+
+.markdown {
+  line-height: 1.5;
+  color: #333
+}
+
+::v-deep pre {
+  background-color: #dcdcdc !important;
+  line-height: 1.7;
+  padding: 5px;
+  border-radius: 10px;
+  margin: 5px 0;
+  font-size: 12px;
 }
 </style>

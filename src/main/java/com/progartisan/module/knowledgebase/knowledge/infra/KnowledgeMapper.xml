@@ -60,6 +60,7 @@
         select *
         from tag
         where parent_tag_id = #{tagId}
+        order by `order`
     </select>
 
     <select id="getTag" resultMap="TagWithParent">

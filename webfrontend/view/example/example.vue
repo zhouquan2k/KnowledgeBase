@@ -44,6 +44,9 @@
           <el-tab-pane label="Input Text" name="input">
             <el-input :rows="25" type="textarea" v-model="currentExample.inputText"></el-input>
           </el-tab-pane>
+          <el-tab-pane label="Origin Content" name="origin">
+            <el-input :rows="25" type="textarea" v-model="currentExample.originContent"></el-input>
+          </el-tab-pane>
           <el-tab-pane label="Output Text" name="output">
             <el-input :rows="25" type="textarea" v-model="currentExample.outputText"></el-input>
           </el-tab-pane>

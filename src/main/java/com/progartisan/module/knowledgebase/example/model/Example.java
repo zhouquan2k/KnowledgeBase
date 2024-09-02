@@ -34,6 +34,9 @@ public class Example extends BaseEntity<Example> {
     @Meta(value = Type.Text, label = "输出文本", nullable = False)
     private String outputText;
 
+    @Meta(value = Type.Text, label="原有内容")
+    private String originContent;
+
     @Override
     public void update(Example example) {
         entityHelper.update(this, example);

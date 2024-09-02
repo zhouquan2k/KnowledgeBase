@@ -1,8 +1,13 @@
 package com.progartisan.module.knowledgebase.knowledge.api;
 
+import com.progartisan.component.framework.EnumDescription;
+import com.progartisan.component.framework.EnumTag;
 import com.progartisan.module.knowledgebase.knowledge.model.Knowledge;
 import com.progartisan.module.knowledgebase.knowledge.model.Tag;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RequestMapping("/api/knowledge")
@@ -38,8 +43,15 @@ public interface KnowledgeService {
     @DeleteMapping("/tags/{tagId}")
     void deleteTag(@PathVariable String tagId);
 
-    @PutMapping("/tags/{tagId}/move")
-    Tag moveTag(@PathVariable String tagId, @RequestBody Tag tag);
+    @Getter
+    @AllArgsConstructor
+    public enum MoveType implements EnumDescription {
+        Inner("inner"), Before("before"), After("after");
+        private String desc;
+    }
+
+    @PutMapping("/tags/{tagId}/move/{moveType}")
+    void moveTag(@PathVariable String tagId, @PathVariable MoveType moveType, @RequestBody Tag refTag);
 
     @DeleteMapping("/{knowledgeId}")
     void deleteKnowledge(@PathVariable String knowledgeId);

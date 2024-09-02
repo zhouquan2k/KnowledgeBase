@@ -81,12 +81,7 @@ export default {
     async handleNodeDrop(draggingNode, dropNode, dropType) {
       const draggedData = draggingNode.data;
       const targetData = dropNode.data;
-      if (dropType === 'inner') {
-        draggedData.parentTagId = targetData.tagId;
-      } else {
-        draggedData.parentTagId = targetData.parentTagId;
-      }
-      await knowledgeApi.moveTag(draggedData.tagId, draggedData.parentTagId);
+      await knowledgeApi.moveTag(draggedData.tagId, dropType, targetData.tagId);
       this.fetchTags();
     }
   }
