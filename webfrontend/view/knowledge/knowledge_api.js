@@ -5,11 +5,12 @@ export default class KnowledgeApi {
         this.baseUrl = `/api/knowledge`;
     }
 
-    async saveKnowledge(knowledge) {
+    async saveKnowledge(knowledge, currentTagId) {
         return await request({
             url: `${this.baseUrl}`,
             method: 'post',
-            data: knowledge
+            data: knowledge,
+            params: { currentTagId }
         });
     }
 
@@ -69,6 +70,21 @@ export default class KnowledgeApi {
     async deleteTag(tagId) {
         return await request({
             url: `${this.baseUrl}/tags/${tagId}`,
+            method: 'delete'
+        });
+    }
+
+    async moveTag(tagId, parentTagId) {
+        return await request({
+            url: `${this.baseUrl}/tags/${tagId}/move`,
+            method: 'put',
+            data: { parentTagId }
+        });
+    }
+
+    async deleteKnowledge(knowledgeId) {
+        return await request({
+            url: `${this.baseUrl}/${knowledgeId}`,
             method: 'delete'
         });
     }

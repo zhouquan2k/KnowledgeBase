@@ -4,13 +4,12 @@ import com.progartisan.module.knowledgebase.knowledge.model.Knowledge;
 import com.progartisan.module.knowledgebase.knowledge.model.Tag;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Map;
 
 @RequestMapping("/api/knowledge")
 public interface KnowledgeService {
 
     @PostMapping
-    Knowledge saveKnowledge(@RequestBody Knowledge knowledge);
+    Knowledge saveKnowledge(@RequestBody Knowledge knowledge, @RequestParam(required = false) String currentTagId);
 
     @GetMapping("/{knowledgeId}")
     Knowledge getKnowledge(@PathVariable String knowledgeId);
@@ -38,4 +37,10 @@ public interface KnowledgeService {
 
     @DeleteMapping("/tags/{tagId}")
     void deleteTag(@PathVariable String tagId);
+
+    @PutMapping("/tags/{tagId}/move")
+    Tag moveTag(@PathVariable String tagId, @RequestBody Tag tag);
+
+    @DeleteMapping("/{knowledgeId}")
+    void deleteKnowledge(@PathVariable String knowledgeId);
 }

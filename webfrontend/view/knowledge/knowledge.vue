@@ -1,8 +1,9 @@
 <template>
   <el-container class="container">
     <el-aside :width="leftPanelWidth + 'px'">
-      <TagTree @change="onTagTreeSelected" />
+      <TagTree @change="onTagTreeSelected" ref="tagTree" />
     </el-aside>
+    <Splitter @resize="(newWidth) => leftPanelWidth = newWidth" />
     <el-aside v-if="knowledgeList.length > 1" width="200px">
       <el-menu :default-active="activeKnowledgeId" @select="refreshKnowledge">
         <el-menu-item v-for="knowledge in knowledgeList" :key="knowledge.knowledgeId" :index="knowledge.knowledgeId">
@@ -10,23 +11,27 @@
         </el-menu-item>
       </el-menu>
     </el-aside>
-    <!--Splitter @resize="(newWidth) => leftPanelWidth = newWidth" /-->
     <el-main>
-
       <div style="margin-bottom:5px" class="left-right">
-        <div style="margin-left:10px;"><el-button type="success" plain icon="el-icon-plus" circle
-            @click="onAddKnowledge"></el-button></div>
-        <div><el-button type="primary" @click="saveKnowledge" icon="el-icon-check" circle></el-button></div>
+        <div style="margin-left:10px;">
+          <el-button type="success" plain icon="el-icon-plus" circle @click="onAddKnowledge"></el-button>
+          <span style="margin-left:10px;color:#97a8be;font-size: 13px;">{{ activeTag?.fullPath.split('/').join(' / ')
+            }}</span>
+        </div>
+        <div v-if="currentKnowledge">
+          <el-button type="primary" @click="saveKnowledge" icon="el-icon-check" circle></el-button>
+          <el-button type="danger" @click="deleteKnowledge" icon="el-icon-delete" circle></el-button>
+        </div>
       </div>
       <el-form :model="currentKnowledge" label-width="50px" v-if="currentKnowledge">
         <el-form-item label="标题">
           <el-input class="simple-input" v-model="currentKnowledge.title"></el-input>
         </el-form-item>
         <el-form-item label="标签" v-if="currentKnowledge?.knowledgeId">
-          <el-tooltip v-for="tag in currentKnowledge.tags" :key="tag.tagId" effect="dark" :content="tag.tag.fullPath"
+          <el-tooltip v-for="tag in currentKnowledge.tags" :key="tag.tagId" effect="dark" :content="tag.tag?.fullPath"
             placement="top-start">
             <el-tag :key="tag.tagId" style="margin-right:5px;">
-              {{ tag.tag.fullPath }}
+              {{ tag.tag?.fullPath.split('/').join(' / ') }}
               <el-button type="text" size="mini" icon="el-icon-close" @click="removeTag(tag.tagId)"></el-button>
             </el-tag>
           </el-tooltip>
@@ -65,6 +70,7 @@ export default {
       currentKnowledge: null,
       tagOptions: [],
       activeKnowledgeId: '',
+      activeTag: null,
       showTagSelection: false,
       newTag: '',
       parentTag: null
@@ -72,6 +78,7 @@ export default {
   },
   methods: {
     onTagTreeSelected(tag) {
+      this.activeTag = tag;
       this.fetchKnowledge(tag?.tagId);
     },
     async fetchKnowledge(tagId) {
@@ -83,7 +90,6 @@ export default {
         this.activeKnowledgeId = '';
         this.currentKnowledge = null;
       }
-
     },
     async fetchTags(query, cb) {
       if (query !== '') {
@@ -115,12 +121,17 @@ export default {
       this.refreshKnowledge(this.currentKnowledge.knowledgeId);
     },
     async saveKnowledge() {
-      this.currentKnowledge = await knowledgeApi.saveKnowledge(this.currentKnowledge);
+      this.currentKnowledge = await knowledgeApi.saveKnowledge(this.currentKnowledge, this.activeTag?.tagId);
       this.$message.success('知识项保存成功');
+      this.refreshKnowledge(this.currentKnowledge.knowledgeId);
+      this.$refs.tagTree.fetchTags();
+    },
+    async deleteKnowledge() {
+      await this.$Confirm('此操作将永久删除该知识项, 是否继续?');
+      await knowledgeApi.deleteKnowledge(this.currentKnowledge.knowledgeId);
+      this.$message.success('知识项删除成功');
+      this.fetchKnowledge(this.activeTag?.tagId);
     }
-  },
-  created() {
-    this.fetchKnowledge();
   }
 };
 </script>

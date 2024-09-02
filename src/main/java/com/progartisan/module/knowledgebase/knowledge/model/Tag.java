@@ -54,4 +54,15 @@ public class Tag extends BaseEntity<Tag> {
         this.tagName = newName;
         calculate();
     }
+
+    public void moveAsChild(Tag newParent) {
+        this.parentTagId = newParent.getTagId();
+        this.parent = newParent;
+        calculate();
+    }
+
+    public void enrichParent(Tag parent) {
+        this.parent = parent;
+        calculate();
+    }
 }

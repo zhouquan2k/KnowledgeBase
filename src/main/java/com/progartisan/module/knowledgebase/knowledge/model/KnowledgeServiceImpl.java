@@ -31,9 +31,12 @@ public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements
 
     @Override
     @Command
-    public Knowledge saveKnowledge(Knowledge knowledge) {
+    public Knowledge saveKnowledge(Knowledge knowledge, String currentTagId) {
         if (Util.isEmpty(knowledge.getKnowledgeId())) {
-            return super.create(knowledge);
+            knowledge = super.create(knowledge);
+            var parentTag = Util.isNotEmpty(currentTagId) ? tagRepository.get(currentTagId).orElseThrow() : null;
+            addTagToKnowledge(knowledge.getKnowledgeId(), Tag.builder().tagName(knowledge.getTitle()).parentTagId(currentTagId).parent(parentTag).build());
+            return knowledge;
         } else {
             return super.update(knowledge.getKnowledgeId(), knowledge);
         }
@@ -133,5 +136,23 @@ public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements
         Tag tag = tagRepository.get(tagId).orElseThrow();
         knowledgeMapper.removeTagFromAllKnowledge(tagId);
         tagRepository.remove(tagId);
+    }
+
+    @Override
+    @Command
+    public Tag moveTag(String tagId, Tag tag) {
+        Tag existingTag = tagRepository.get(tagId).orElseThrow();
+        var newParent = tagRepository.get(tag.getParentTagId()).orElseThrow();
+        existingTag.moveAsChild(newParent);
+        var returnTag = (Tag) tagRepository.save(existingTag);
+        this.updateChildrenFullPath(existingTag);
+        return returnTag;
+    }
+
+    @Override
+    @Command
+    public void deleteKnowledge(String knowledgeId) {
+        Knowledge knowledge = knowledgeRepository.get(knowledgeId).orElseThrow();
+        knowledgeRepository.remove(knowledgeId);
     }
 }
