@@ -25,7 +25,7 @@
       </div>
       <el-form :model="currentKnowledge" label-width="50px" v-if="currentKnowledge">
         <el-form-item label="标题">
-          <el-input class="simple-input" v-model="currentKnowledge.title"></el-input>
+          <el-input class="simple-input title" v-model="currentKnowledge.title"></el-input>
         </el-form-item>
         <el-form-item label="标签" v-if="currentKnowledge?.knowledgeId">
           <el-tooltip v-for="tag in currentKnowledge.tags" :key="tag.tagId" effect="dark" :content="tag.tag?.fullPath"
@@ -52,7 +52,15 @@
               <div class="markdown" v-html="renderedMarkdown"></div>
             </el-tab-pane>
             <el-tab-pane label="编辑" name="edit">
-              <el-input type="textarea" v-model="currentKnowledge.content" :rows="25"></el-input>
+              <el-container style="height:500px;overflow: auto;">
+                <el-aside :width="editPanelWidth + 'px'">
+                  <el-input type="textarea" v-model="currentKnowledge.content" :rows="30"></el-input>
+                </el-aside>
+                <Splitter @resize="(newWidth) => editPanelWidth = newWidth" />
+                <el-main style="padding:20px">
+                  <div class="markdown" v-html="renderedMarkdown"></div>
+                </el-main>
+              </el-container>
             </el-tab-pane>
           </el-tabs>
         </el-form-item>
@@ -74,6 +82,7 @@ export default {
   data() {
     return {
       leftPanelWidth: 200,
+      editPanelWidth: 600,
       knowledgeList: [],
       currentKnowledge: null,
       tagOptions: [],
@@ -115,6 +124,7 @@ export default {
     onAddKnowledge() {
       this.currentKnowledge = { tags: [] };
       this.activeKnowledgeId = null;
+      this.activeTab = 'edit';
     },
     async refreshKnowledge(knowledgeId) {
       this.currentKnowledge = await knowledgeApi.getKnowledge(knowledgeId);
@@ -161,6 +171,7 @@ export default {
   background-color: #ffffff;
   padding: 0px 0px;
   border: 1px solid #dcdcdc;
+  margin-bottom: 0px !important;
 }
 
 .el-main {
@@ -189,6 +200,10 @@ export default {
 
 .el-tag .el-button--mini {
   padding: 0px;
+}
+
+.title ::v-deep .el-input__inner {
+  font-weight: bold;
 }
 
 .content ::v-deep .el-form-item__content {

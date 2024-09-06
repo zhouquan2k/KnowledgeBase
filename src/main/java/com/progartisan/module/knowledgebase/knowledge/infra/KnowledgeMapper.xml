@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.progartisan.module.knowledgebase.knowledge.infra.KnowledgeMapper">
-    <resultMap id="KnowledgeTag" type="com.progartisan.module.knowledgebase.knowledge.model.Knowledge$KnowledgeTag" autoMapping="true">
+    <resultMap id="KnowledgeTag" type="com.progartisan.module.knowledgebase.knowledge.model.Knowledge$KnowledgeTag"
+               autoMapping="true">
         <id property="id" column="id"/>
         <association property="tag" resultMap="Tag" notNullColumn="tag_id"/>
     </resultMap>
@@ -64,9 +65,17 @@
     </select>
 
     <select id="getTag" resultMap="TagWithParent">
-        select t.*, p.tag_name as _parent_tag_name, p.full_path as _parent_full_path, p.tag_id as _parent_tag_id, p.parent_tag_id as _parent_parent_tag_id
+        select t.*, p.tag_name as _parent_tag_name, p.full_path as _parent_full_path, p.tag_id as _parent_tag_id,
+        p.parent_tag_id as _parent_parent_tag_id
         from tag t
         left join tag p on t.parent_tag_id = p.tag_id
         where t.tag_id = #{tagId}
+    </select>
+
+    <!-- 按tag名精确找到tag -->
+    <select id="getTagsByName" resultMap="Tag">
+        select *
+        from tag
+        where tag_name = #{tagName}
     </select>
 </mapper>

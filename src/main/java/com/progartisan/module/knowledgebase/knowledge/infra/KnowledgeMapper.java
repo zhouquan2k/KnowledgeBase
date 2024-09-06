@@ -29,4 +29,7 @@ public interface KnowledgeMapper extends BaseMapper<Knowledge> {
 
     // 批量删除某个tagId的所有知识-标签
     void removeTagFromAllKnowledge(@Param("tagId") String tagId);
+
+    // 按tag名精确找到tags
+    List<Tag> getTagsByName(@Param("tagName") String tagName);
 }

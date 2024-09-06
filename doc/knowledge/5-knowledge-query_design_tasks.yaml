@@ -1,0 +1,55 @@
+projectName: knowledgebase
+artifacts:
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: api
+    artifactName: api/KnowledgeQueryService.java
+    needChange: true
+    referenceDocs: [ ]
+    referenceArtifacts: [ ]
+    artifactDescription: >
+      定义处理知识项查询的API接口，包括按tag名精确匹配并返回对应的知识项内容。
+      - 方法：List<Knowledge> queryKnowledgeByTag(String tagName, boolean needParent) // needParent(是否需要父tag的内容)
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: domain
+    artifactName: model/Knowledge.java
+    needChange: false
+    referenceDocs: [ ]
+    referenceArtifacts: [ ]
+    artifactDescription: >
+      知识项的DomainEntity，包含知识项的基本属性。
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: mapper
+    artifactName: infra/KnowledgeMapper.java
+    needChange: true
+    referenceDocs: [ ]
+    referenceArtifacts: [ ]
+    artifactDescription: >
+      新增知识项的Mapper接口，
+      - 按tag名精确找到tag：getTagByName。
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: mapper_xml
+    artifactName: infra/KnowledgeMapper.xml
+    needChange: true
+    referenceDocs: [ ]
+    referenceArtifacts: [ ]
+    artifactDescription: >
+      提供知识项相关的SQL语句，
+      - 按tag名精确找到tag：getTagByName
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: service_impl
+    artifactName: model/KnowledgeQueryServiceImpl.java
+    needChange: true
+    referenceDocs: [ ]
+    referenceArtifacts: [ ]
+    artifactDescription: >
+      实现知识项查询的业务逻辑，包括处理按tag名精确匹配并返回对应的知识项内容的请求。
+      - 方法：List<Knowledge> queryKnowledgeByTag(String tagName, boolean needParent) // needParent(是否需要父tag的内容)
