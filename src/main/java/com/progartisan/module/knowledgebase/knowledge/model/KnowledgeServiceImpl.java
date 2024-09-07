@@ -11,7 +11,14 @@ import com.progartisan.module.knowledgebase.knowledge.infra.KnowledgeMapper;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Named;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @Service(value = "知识管理", name = "knowledge")
 @Named
@@ -20,12 +27,14 @@ public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements
 
     private final Repository<Tag> tagRepository;
     private final Repository<Knowledge> knowledgeRepository;
+    private final Repository<Document> documentRepository;
     private final KnowledgeMapper knowledgeMapper;
 
-    public KnowledgeServiceImpl(Repository<Knowledge> knowledgeRepository, Repository<Tag> tagRepository, KnowledgeMapper knowledgeMapper) {
+    public KnowledgeServiceImpl(Repository<Knowledge> knowledgeRepository, Repository<Tag> tagRepository, Repository<Document> documentRepository, KnowledgeMapper knowledgeMapper) {
         super(knowledgeRepository);
         this.tagRepository = tagRepository;
         this.knowledgeRepository = knowledgeRepository;
+        this.documentRepository = documentRepository;
         this.knowledgeMapper = knowledgeMapper;
     }
 
@@ -104,8 +113,8 @@ public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements
 
     @Override
     @Query
-    public List<Tag> getTagTree() {
-        return knowledgeMapper.queryTagTree();
+    public List<Tag> getTagTree(String project) {
+        return knowledgeMapper.queryTagTree(project);
     }
 
     @Override
@@ -156,5 +165,92 @@ public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements
     public void deleteKnowledge(String knowledgeId) {
         Knowledge knowledge = knowledgeRepository.get(knowledgeId).orElseThrow();
         knowledgeRepository.remove(knowledgeId);
+    }
+
+    @Override
+    @Command
+    public void importDocuments(String project) {
+        var theProject = knowledgeMapper.getProject(project);
+        Util.check(theProject != null, "invalid project name", project);
+        try {
+            Map<String, List<Path>> fileGroups = new HashMap<>();
+            Path projectPath = Path.of(theProject.getProjectPath());
+
+            // 首先对文件进行分组
+            Files.walk(projectPath)
+                    .filter(Files::isRegularFile)
+                    .filter(path -> {
+                        String fileName = path.getFileName().toString();
+                        return fileName.endsWith(".md") || fileName.endsWith(".yaml");
+                    })
+                    .forEach(filePath -> {
+                        String fileName = filePath.getFileName().toString();
+                        String baseName = fileName.split("_")[0];
+                        fileGroups.computeIfAbsent(baseName, k -> new ArrayList<>()).add(filePath);
+                    });
+
+            // 处理每个文件分组
+            for (Map.Entry<String, List<Path>> entry : fileGroups.entrySet()) {
+                String baseName = entry.getKey();
+                List<Path> files = entry.getValue();
+
+                Document.DocumentBuilder builder = Document.builder()
+                        .project(project)
+                        .documentName(baseName);
+
+                // 获取相对路径
+                Path relativePath = projectPath.relativize(files.get(0).getParent());
+                builder.documentPath(relativePath.toString());
+
+                for (Path filePath : files) {
+                    String fileName = filePath.getFileName().toString();
+                    try {
+                        String content = Files.readString(filePath, StandardCharsets.UTF_8);
+                        if (fileName.endsWith("_task.md")) {
+                            builder.rawInput(content);
+                        } else if (fileName.endsWith("_req.md")) {
+                            builder.requirement(content);
+                        } else if (fileName.endsWith("_design_ui.md")) {
+                            builder.uiDesign(content);
+                        } else if (fileName.endsWith("_design.md")) {
+                            builder.design(content);
+                        } else if (fileName.endsWith("_design_tasks.yaml")) {
+                            builder.taskDesign(content);
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException("Error reading file: " + filePath, e);
+                    }
+                }
+
+                Document document = builder.build();
+                documentRepository.save(document);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error walking file tree", e);
+        }
+    }
+
+    @Override
+    @Query
+    public List<Document> getDocuments(String project, String tagName) {
+        return knowledgeMapper.queryDocuments(project, tagName);
+    }
+
+    @Override
+    @Query
+    public Document getDocument(String documentId) {
+        return knowledgeMapper.getDocument(documentId);
+    }
+
+    @Override
+    @Query
+    public List<Project> getProjects() {
+        return knowledgeMapper.queryAllProjects();
+    }
+
+    @Override
+    @Query
+    public Project getProject(String projectName) {
+        return knowledgeMapper.getProject(projectName);
     }
 }

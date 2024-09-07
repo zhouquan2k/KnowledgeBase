@@ -29,6 +29,9 @@ public class Tag extends BaseEntity<Tag> {
     @Meta(value = Type.RefID, label = "父标签ID")
     private String parentTagId;
 
+    @Meta(value = Type.String, label = "项目名称", nullable = False)
+    private String project;
+
     @Meta(value = Type.Integer, label = "标签顺序")
     private Integer order;
 

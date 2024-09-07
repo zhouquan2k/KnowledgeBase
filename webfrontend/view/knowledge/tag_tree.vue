@@ -1,5 +1,8 @@
 <template>
   <div>
+    <el-select v-if="!project" v-model="currentProject" placeholder="选择项目" @change="onProjectChange">
+      <el-option v-for="project in projects" :key="project.projectName" :label="project.projectDesc" :value="project"></el-option>
+    </el-select>
     <el-tree :data="tags" node-key="tagId" :props="defaultProps" @node-click="handleNodeClick" default-expand-all
       :expand-on-click-node="false" draggable @node-drop="handleNodeDrop">
       <span class="custom-tree-node" slot-scope="{ node, data }">
@@ -20,10 +23,18 @@
 import { knowledgeApi } from './knowledge_api';
 
 export default {
+  props: {
+    project: {
+      type: String,
+      required: false
+    }
+  },
   data() {
     return {
+      projects: [],
       tags: [],
       editingTagId: null,
+      currentProject: null,
       defaultProps: {
         children: 'children',
         label: 'tagName'
@@ -31,11 +42,23 @@ export default {
     };
   },
   created() {
-    this.fetchTags();
+    this.fetchProjects();
+    if (this.project) {
+      this.currentProject = {projectName: this.project};
+      this.fetchTags();
+    }
   },
   methods: {
+    onProjectChange(project) {
+      this.currentProject = project;
+      this.fetchTags();
+      this.$emit('project-change', project);
+    },
+    async fetchProjects() {
+      this.projects = await knowledgeApi.getProjects();
+    },
     async fetchTags() {
-      const tags = await knowledgeApi.getTagTree();
+      const tags = await knowledgeApi.getTagTree(this.currentProject?.projectName);
       this.tags = this.buildTree(tags);
     },
     buildTree(data) {

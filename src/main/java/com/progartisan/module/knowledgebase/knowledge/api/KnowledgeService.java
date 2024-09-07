@@ -4,11 +4,14 @@ import com.progartisan.component.framework.EnumDescription;
 import com.progartisan.component.framework.EnumTag;
 import com.progartisan.module.knowledgebase.knowledge.model.Knowledge;
 import com.progartisan.module.knowledgebase.knowledge.model.Tag;
+import com.progartisan.module.knowledgebase.knowledge.model.Document;
+import com.progartisan.module.knowledgebase.knowledge.model.Project;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/api/knowledge")
 public interface KnowledgeService {
@@ -34,8 +37,8 @@ public interface KnowledgeService {
     @DeleteMapping("/{knowledgeId}/tags/{tagId}")
     Knowledge removeTagFromKnowledge(@PathVariable String knowledgeId, @PathVariable String tagId);
 
-    @GetMapping("/tags/tree")
-    List<Tag> getTagTree();
+    @GetMapping("/tags/{project}/tree")
+    List<Tag> getTagTree(@PathVariable String project);
 
     @PutMapping("/tags/{tagId}")
     Tag updateTag(@PathVariable String tagId, @RequestBody Tag tag);
@@ -55,4 +58,19 @@ public interface KnowledgeService {
 
     @DeleteMapping("/{knowledgeId}")
     void deleteKnowledge(@PathVariable String knowledgeId);
+
+    @PostMapping("/documents/{project}/import")
+    void importDocuments(@PathVariable String project);
+
+    @GetMapping("/documents/{project}")
+    List<Document> getDocuments(@PathVariable String project, @RequestParam(required = false) String tagName);
+
+    @GetMapping("/documents/id/{documentId}")
+    Document getDocument(@PathVariable String documentId);
+
+    @GetMapping("/projects")
+    List<Project> getProjects();
+
+    @GetMapping("/projects/{projectName}")
+    Project getProject(@PathVariable String projectName);
 }

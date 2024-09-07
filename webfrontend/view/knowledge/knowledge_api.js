@@ -52,9 +52,9 @@ export default class KnowledgeApi {
         });
     }
 
-    async getTagTree() {
+    async getTagTree(project) {
         return await request({
-            url: `${this.baseUrl}/tags/tree`,
+            url: `${this.baseUrl}/tags/${project}/tree`,
             method: 'get'
         });
     }
@@ -86,6 +86,42 @@ export default class KnowledgeApi {
         return await request({
             url: `${this.baseUrl}/${knowledgeId}`,
             method: 'delete'
+        });
+    }
+
+    async importDocuments(projectName) {
+        return await request({
+            url: `${this.baseUrl}/documents/${projectName}/import`,
+            method: 'post',
+        });
+    }
+
+    async getDocuments(projectName, tagName) {
+        return await request({
+            url: `${this.baseUrl}/documents/${projectName}`,
+            method: 'get',
+            params: { tagName }
+        });
+    }
+
+    async getDocument(documentId) {
+        return await request({
+            url: `${this.baseUrl}/documents/id/${documentId}`,
+            method: 'get'
+        });
+    }
+
+    async getProjects() {
+        return await request({
+            url: `${this.baseUrl}/projects`,
+            method: 'get'
+        });
+    }
+
+    async getProject(projectName) {
+        return await request({
+            url: `${this.baseUrl}/projects/${projectName}`,
+            method: 'get'
         });
     }
 };

@@ -19,6 +19,19 @@
         <id property="tagId" column="tag_id"/>
         <association property="parent" resultMap="Tag" notNullColumn="tag_id" columnPrefix="_parent_"/>
     </resultMap>
+    <resultMap id="DocumentTag" type="com.progartisan.module.knowledgebase.knowledge.model.Document$DocumentTag"
+               autoMapping="true">
+        <id property="id" column="id"/>
+        <association property="tag" resultMap="Tag" notNullColumn="tag_id"/>
+    </resultMap>
+    <resultMap id="Document" type="com.progartisan.module.knowledgebase.knowledge.model.Document" autoMapping="true">
+        <id property="documentId" column="document_id"/>
+        <collection property="tags" notNullColumn="tag_id" resultMap="DocumentTag"/>
+    </resultMap>
+    <resultMap id="Project" type="com.progartisan.module.knowledgebase.knowledge.model.Project" autoMapping="true">
+        <id property="projectName" column="project_name"/>
+    </resultMap>
+
     <select id="getKnowledge" resultMap="Knowledge">
         select *
         from knowledge k
@@ -48,6 +61,7 @@
     <select id="queryTagTree" resultMap="Tag">
         select *
         from tag
+        where project = #{projectName}
         order by parent_tag_id, `order`
     </select>
 
@@ -77,5 +91,39 @@
         select *
         from tag
         where tag_name = #{tagName}
+    </select>
+
+    <!-- 按tagName查询文档列表 -->
+    <select id="queryDocuments" resultMap="Document">
+        select *
+        from document d
+        left join document_tag dt on d.document_id = dt.document_id
+        left join tag t on dt.tag_id = t.tag_id
+        where d.project = #{project}
+        <if test="tagName != null and tagName != ''">
+            and t.tag_name = #{tagName}
+        </if>
+    </select>
+
+    <!-- 按documentId查询文档详情 -->
+    <select id="getDocument" resultMap="Document">
+        select *
+        from document d
+        left join document_tag dt on d.document_id = dt.document_id
+        left join tag t on dt.tag_id = t.tag_id
+        where d.document_id = #{documentId}
+    </select>
+
+    <!-- 查所有项目 -->
+    <select id="queryAllProjects" resultMap="Project">
+        select *
+        from project
+    </select>
+
+    <!-- 按projectName查项目详情 -->
+    <select id="getProject" resultMap="Project">
+        select *
+        from project
+        where project_name = #{projectName}
     </select>
 </mapper>

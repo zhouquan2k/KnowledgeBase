@@ -1,7 +1,7 @@
 <template>
   <el-container class="container">
     <el-aside :width="leftPanelWidth + 'px'">
-      <TagTree @change="onTagTreeSelected" ref="tagTree" />
+      <TagTree @change="onTagTreeSelected" ref="tagTree" project="development" />
     </el-aside>
     <Splitter @resize="(newWidth) => leftPanelWidth = newWidth" />
     <el-aside v-if="knowledgeList.length > 1" width="200px">

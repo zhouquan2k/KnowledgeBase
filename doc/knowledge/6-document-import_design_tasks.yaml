@@ -1,0 +1,133 @@
+projectName: knowledgebase
+artifacts:
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: api
+    artifactName: api/KnowledgeService.java
+    needChange: true
+    referenceDocs: [ ]
+    referenceArtifacts: [ ]
+    artifactDescription: >
+      定义处理文档和项目相关的API接口，包括：
+      - importDocuments: POST /api/documents/import
+      - getDocuments: GET /api/documents
+      - getDocument: GET /api/documents/{documentId}
+      - getProjects: GET /api/projects
+      - getProject: GET /api/projects/{projectName}
+      - getTagTree: GET /api/knowledge/tags/{project}/tree
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: domain
+    artifactName: model/Document.java
+    needChange: true
+    referenceDocs: [ ]
+    referenceArtifacts: [ ]
+    artifactDescription: >
+      新增文档的DomainEntity
+      - 包括文档ID、文档名称、文档路径、项目名称、原始输入、需求、UI设计、设计、任务设计、标签列表。
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: domain
+    artifactName: model/Project.java
+    needChange: true
+    referenceDocs: [ ]
+    referenceArtifacts: [ ]
+    artifactDescription: >
+      新增项目的DomainEntity
+      - 包括项目名称、项目描述、项目路径。
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: domain
+    artifactName: model/Tag.java
+    needChange: true
+    referenceDocs: [ ]
+    referenceArtifacts: [ ]
+    artifactDescription: >
+      新增project属性
+
+  - moduleType: frontend
+    moduleName: knowledge
+    artifactType: api_js
+    artifactName: knowledge_api.js
+    needChange: true
+    referenceDocs: [ ]
+    referenceArtifacts: [ ]
+    artifactDescription: >
+      新增处理文档和项目相关的前端API调用
+
+  - moduleType: frontend
+    moduleName: knowledge
+    artifactType: ui_vue
+    artifactName: tag_tree.vue
+    needChange: true
+    referenceDocs: [ ]
+    referenceArtifacts: [ ]
+    artifactDescription: >
+      在tag树顶部增加project的下拉列表，用户可以选择project，系统会显示该project的tag树。
+
+  - moduleType: frontend
+    moduleName: knowledge
+    artifactType: ui_vue
+    artifactName: document.vue
+    needChange: true
+    referenceDocs: [ ]
+    referenceArtifacts:
+      - file:ui_vue._frontend_.knowledge.knowledge.vue
+    artifactDescription: >
+      新增文档管理的UI组件，包括文档列表和文档详情的展示。
+      - UI结构
+        - 导入按钮（顶部）
+        - 文档tag区域（左侧）
+        - 文档列表区域（中间）
+        - 文件详情区域（右侧）
+      - UI交互
+        - 用户点击导入按钮，系统会扫描指定目录及下级目录下的所有文件，根据文件名后缀将文件内容导入数据库中相应字段
+        - 用户可以在文档页面查看当前Project的导入的文档列表和文档的详情
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: mapper
+    artifactName: infra/KnowledgeMapper.java
+    needChange: true
+    referenceDocs: [ ]
+    referenceArtifacts: [ ]
+    artifactDescription: >
+      新增文档和项目的Mapper接口，
+      - 按documentId查文档详情: getDocument
+      - 查所有项目: queryAllProjects
+      - 按projectName查项目详情: getProject
+      - 重构queryTagTree，增加projectName参数
+
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: mapper_xml
+    artifactName: infra/KnowledgeMapper.xml
+    needChange: true
+    referenceDocs: [ ]
+    referenceArtifacts: [ ]
+    artifactDescription: >
+      提供文档和项目相关的SQL语句, 
+      - 按documentId查文档详情: getDocument
+      - 查所有项目: queryAllProjects
+      - 按projectName查项目详情: getProject
+      - 重构queryTagTree，增加projectName参数
+
+  - moduleType: backend
+    moduleName: knowledge
+    artifactType: service_impl
+    artifactName: model/KnowledgeServiceImpl.java
+    needChange: true
+    referenceDocs: [ ]
+    referenceArtifacts: [ ]
+    artifactDescription: >
+      实现文档和项目的业务逻辑，包括处理新增、查询、更新、删除文档和项目的请求。
+      - 导入文档方法 importDocuments
+      - 获取文档列表方法 getDocuments
+      - 获取文档详情方法 getDocument
+      - 获取项目列表方法 getProjects
+      - 获取项目详情方法 getProject
+      - 重构获取tag树方法 getTagTree，增加输入参数projectName
