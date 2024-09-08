@@ -3,6 +3,7 @@
 - 在现有的Knowledge模块中，增加一个新的查询接口，通过tag名精确匹配并返回对应的知识项内容。
 - 使用单独的查询接口KnowledgeQueryService来实现该功能。
 - 这是一个REST API，不需要UI。
+- 增加一个新的接口，支持通过知识项ID获取知识项的HTML内容。
 
 ## 模块
 
@@ -18,6 +19,12 @@ module-name: knowledge
     - QueryParam：tagName, needParent(是否需要父tag的内容)
     - Response: List<Knowledge>
     - Description：通过tag名精确匹配并返回对应的知识项内容。
+
+- GET /api/knowledge/query/tag/{id}.html
+    - Operation: getTagHtml
+    - PathParam：id
+    - Response: String (HTML内容)
+    - Description：通过知识项ID获取知识项的HTML内容, 以及所有子节点的超链接
 
 ## Artifacts
 

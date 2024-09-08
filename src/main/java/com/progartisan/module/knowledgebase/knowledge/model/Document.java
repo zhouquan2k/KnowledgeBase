@@ -38,19 +38,19 @@ public class Document extends BaseEntity<Document> {
     @Meta(value = Type.String, label = "项目名称", nullable = False)
     private String project;
 
-    @Meta(value = Type.Text, label = "原始输入")
+    @Meta(value = Type.Text, label = "原始输入", updatable = True)
     private String rawInput;
 
-    @Meta(value = Type.Text, label = "需求")
+    @Meta(value = Type.Text, label = "需求", updatable = True)
     private String requirement;
 
-    @Meta(value = Type.Text, label = "UI设计")
+    @Meta(value = Type.Text, label = "UI设计", updatable = True)
     private String uiDesign;
 
-    @Meta(value = Type.Text, label = "设计")
+    @Meta(value = Type.Text, label = "设计", updatable = True)
     private String design;
 
-    @Meta(value = Type.Text, label = "任务设计")
+    @Meta(value = Type.Text, label = "任务设计", updatable = True)
     private String taskDesign;
 
     @Meta(value = Type.ToMany, label = "标签列表")
@@ -70,6 +70,9 @@ public class Document extends BaseEntity<Document> {
 
         @Meta(value = Type.RefID, nullable = False)
         private String tagId;
+
+        @Meta(value = Type.String)
+        private String tagType;
 
         @Meta(value = Type.Integer, hidden = True)
         private Integer index;

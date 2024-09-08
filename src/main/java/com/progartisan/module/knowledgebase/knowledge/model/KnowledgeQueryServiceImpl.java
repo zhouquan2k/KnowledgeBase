@@ -43,4 +43,35 @@ public class KnowledgeQueryServiceImpl implements KnowledgeQueryService {
         Tag parentTag = knowledgeMapper.getTag(currentTag.getParentTagId());
         getParentIds(parentTag, tagIds);
     }
+
+    @Override
+    @Query
+    public String getTagHtml(String id) {
+        // var tag = knowledgeMapper.getTag(id);
+        // Util.check(tag != null, "tag not found: %s", id);
+        StringBuilder htmlContent = new StringBuilder();
+        // 获取所有子标签
+        List<Tag> childrenTags = knowledgeMapper.getChildrenTags(id);
+        var knowledge = knowledgeMapper.getKnowledgeByTitleTagId(id);
+        htmlContent.append("<html><body>");
+        // 获取所有这些子标签的 知识点
+        if (!childrenTags.isEmpty()) {
+            htmlContent.append("<ul>");
+            childrenTags.forEach(child -> {
+                htmlContent.append("<li><a href=\"/api/knowledge/query/tag/")
+                        .append(child.getTagId())
+                        .append(".html\">")
+                        .append(child.getTagName())
+                        .append("</a></li>");
+            });
+            htmlContent.append("</ul>");
+        }
+        if (knowledge != null) {
+            htmlContent.append("<pre>");
+            htmlContent.append(knowledge.getContent());
+            htmlContent.append("</pre>");
+        }
+        htmlContent.append("</body></html>");
+        return htmlContent.toString();
+    }
 }

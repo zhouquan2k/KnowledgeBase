@@ -8,18 +8,9 @@ artifacts:
     referenceDocs: [ ]
     referenceArtifacts: [ ]
     artifactDescription: >
-      定义处理知识项查询的API接口，包括按tag名精确匹配并返回对应的知识项内容。
-      - 方法：List<Knowledge> queryKnowledgeByTag(String tagName, boolean needParent) // needParent(是否需要父tag的内容)
-
-  - moduleType: backend
-    moduleName: knowledge
-    artifactType: domain
-    artifactName: model/Knowledge.java
-    needChange: false
-    referenceDocs: [ ]
-    referenceArtifacts: [ ]
-    artifactDescription: >
-      知识项的DomainEntity，包含知识项的基本属性。
+      定义处理知识查询的API接口，包括：
+      - 通过tag名精确匹配并返回对应的知识项内容的方法 queryKnowledgeByTag
+      - 通过知识项ID获取知识项的HTML内容的方法 getTagHtml
 
   - moduleType: backend
     moduleName: knowledge
@@ -29,8 +20,9 @@ artifacts:
     referenceDocs: [ ]
     referenceArtifacts: [ ]
     artifactDescription: >
-      新增知识项的Mapper接口，
-      - 按tag名精确找到tag：getTagByName。
+      新增知识查询的Mapper接口，
+      - 按tag名精确匹配并返回对应的知识项内容: queryKnowledgeByTag。
+      - 通过知识项ID获取知识项的HTML内容的方法 getTagHtml
 
   - moduleType: backend
     moduleName: knowledge
@@ -40,8 +32,9 @@ artifacts:
     referenceDocs: [ ]
     referenceArtifacts: [ ]
     artifactDescription: >
-      提供知识项相关的SQL语句，
-      - 按tag名精确找到tag：getTagByName
+      提供知识查询相关的SQL语句,
+      - 按tag名精确匹配并返回对应的知识项内容: queryKnowledgeByTag。
+      - 通过知识项ID获取知识项的HTML内容的方法 getTagHtml
 
   - moduleType: backend
     moduleName: knowledge
@@ -51,5 +44,6 @@ artifacts:
     referenceDocs: [ ]
     referenceArtifacts: [ ]
     artifactDescription: >
-      实现知识项查询的业务逻辑，包括处理按tag名精确匹配并返回对应的知识项内容的请求。
-      - 方法：List<Knowledge> queryKnowledgeByTag(String tagName, boolean needParent) // needParent(是否需要父tag的内容)
+      实现知识查询的业务逻辑，包括：
+      - 通过tag名精确匹配并返回对应的知识项内容的方法 queryKnowledgeByTag
+      - 通过知识项ID获取知识项的HTML内容, 以及所有子节点的超链接 的方法 getTagHtml

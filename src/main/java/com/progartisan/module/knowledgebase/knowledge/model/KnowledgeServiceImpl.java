@@ -44,10 +44,11 @@ public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements
         if (Util.isEmpty(knowledge.getKnowledgeId())) {
             knowledge = super.create(knowledge);
             var parentTag = Util.isNotEmpty(currentTagId) ? tagRepository.get(currentTagId).orElseThrow() : null;
-            addTagToKnowledge(knowledge.getKnowledgeId(), Tag.builder().tagName(knowledge.getTitle()).parentTagId(currentTagId).parent(parentTag).build());
+            addTagToKnowledge(knowledge.getKnowledgeId(), "title", Tag.builder().tagName(knowledge.getTitle()).parentTagId(currentTagId).parent(parentTag).build());
             return knowledge;
         } else {
             return super.update(knowledge.getKnowledgeId(), knowledge);
+            // TODO to update title tags?
         }
     }
 
@@ -91,7 +92,7 @@ public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements
 
     @Override
     @Command
-    public Knowledge addTagToKnowledge(String knowledgeId, Tag tag) {
+    public Knowledge addTagToKnowledge(String knowledgeId, String tagType, Tag tag) {
         Knowledge knowledge = knowledgeRepository.get(knowledgeId).orElseThrow();
         Tag theTag = null;
         if (Util.isEmpty(tag.getTagId())) {
@@ -99,7 +100,7 @@ public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements
         } else { // reuse a tag exist
             theTag = tagRepository.get(tag.getTagId()).orElseThrow();
         }
-        knowledge.addTag(theTag);
+        knowledge.addTag(theTag, tagType);
         return (Knowledge) knowledgeRepository.save(knowledge);
     }
 
@@ -193,15 +194,18 @@ public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements
             for (Map.Entry<String, List<Path>> entry : fileGroups.entrySet()) {
                 String baseName = entry.getKey();
                 List<Path> files = entry.getValue();
-
-                Document.DocumentBuilder builder = Document.builder()
-                        .project(project)
-                        .documentName(baseName);
-
                 // 获取相对路径
                 Path relativePath = projectPath.relativize(files.get(0).getParent());
-                builder.documentPath(relativePath.toString());
+                String documentPath = relativePath.toString();
 
+                // 检查文档是否已存在
+                Document existingDocument = knowledgeMapper.getDocumentByProjectAndName(project, baseName);
+                boolean isNewDocument = (existingDocument == null);
+
+                Document.DocumentBuilder builder = Document.builder();
+                builder.project(project)
+                        .documentName(baseName)
+                        .documentPath(documentPath);
                 for (Path filePath : files) {
                     String fileName = filePath.getFileName().toString();
                     try {
@@ -221,9 +225,13 @@ public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements
                         throw new RuntimeException("Error reading file: " + filePath, e);
                     }
                 }
-
                 Document document = builder.build();
-                documentRepository.save(document);
+                if (!isNewDocument) {
+                    var theDocument = documentRepository.get(existingDocument.getDocumentId()).orElseThrow();
+                    theDocument.update(document);
+                    documentRepository.save(theDocument);
+                } else
+                    documentRepository.save(document);
             }
         } catch (IOException e) {
             throw new RuntimeException("Error walking file tree", e);

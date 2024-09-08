@@ -46,4 +46,8 @@ public interface KnowledgeMapper extends BaseMapper<Knowledge> {
 
     // 按projectName查项目详情
     Project getProject(@Param("projectName") String projectName);
+
+    Knowledge getKnowledgeByTitleTagId(String tagId);
+
+    Document getDocumentByProjectAndName(String project, String baseName);
 }

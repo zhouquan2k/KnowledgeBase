@@ -1,5 +1,6 @@
 package com.progartisan.module.knowledgebase.knowledge.model;
 
+import com.progartisan.component.common.Util;
 import com.progartisan.component.data.BaseEntity;
 import com.progartisan.component.meta.Meta;
 import com.progartisan.component.meta.Meta.Type;
@@ -51,6 +52,9 @@ public class Knowledge extends BaseEntity<Knowledge> {
         @Meta(value = Type.RefID, nullable = False)
         private String tagId;
 
+        @Meta(value = Type.String)
+        private String tagType;
+
         @Meta(value = Type.Integer, hidden = True)
         private Integer index;
 
@@ -63,7 +67,7 @@ public class Knowledge extends BaseEntity<Knowledge> {
         entityHelper.update(this, knowledge);
     }
 
-    public void addTag(Tag tag) {
+    public void addTag(Tag tag, String tagType) {
         if (tags == null) {
             tags = new HashSet<>();
         }
@@ -76,4 +80,11 @@ public class Knowledge extends BaseEntity<Knowledge> {
             tags.removeIf(tag -> tag.getTagId().equals(tagId));
         }
     }
+
+    public String getTitleTagId() {
+        var titleTagId = this.tags.stream().filter(tag -> Util.equals(tag.getTagType(), "title")).findFirst().map(KnowledgeTag::getTagId).orElse(null);
+        return titleTagId;
+    }
+
+
 }
