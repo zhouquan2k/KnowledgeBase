@@ -19,6 +19,7 @@
             }}</span>
         </div>
         <div v-if="currentKnowledge">
+          <a :href="`/api/knowledge/query/development/tag/${currentKnowledge.titleTagId}.html`" target="_blank" class="margin"><el-button type="info" icon="el-icon-link" circle></el-button></a>
           <el-button type="primary" @click="saveKnowledge" icon="el-icon-check" circle></el-button>
           <el-button type="danger" @click="deleteKnowledge" icon="el-icon-delete" circle></el-button>
         </div>

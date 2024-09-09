@@ -72,6 +72,7 @@ public class KnowledgeQueryServiceImpl implements KnowledgeQueryService {
             htmlContent.append("</ul>");
         }
         if (knowledge != null) {
+            htmlContent.append(String.format("<h2>%s</h2>", knowledge.getTitle()));
             htmlContent.append("<pre>");
             htmlContent.append(knowledge.getContent());
             htmlContent.append("</pre>");
