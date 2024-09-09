@@ -23,7 +23,7 @@ public interface KnowledgeMapper extends BaseMapper<Knowledge> {
     List<Tag> queryTagTree(@Param("projectName") String projectName);
 
     // 查子tag
-    List<Tag> getChildrenTags(String tagId);
+    List<Tag> getChildrenTags(String project, String tagId);
 
     Tag getTag(String tagId);
 

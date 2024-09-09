@@ -30,11 +30,12 @@ export default class KnowledgeApi {
         });
     }
 
-    async addTagToKnowledge(knowledgeId, tag) {
+    async addTagToKnowledge(knowledgeId, tag, tagType) {
         return await request({
             url: `${this.baseUrl}/${knowledgeId}/tags`,
             method: 'post',
-            data: tag
+            data: tag,
+            params: { tagType }
         });
     }
 

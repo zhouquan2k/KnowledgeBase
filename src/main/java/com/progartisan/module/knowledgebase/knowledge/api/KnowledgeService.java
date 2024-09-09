@@ -32,7 +32,7 @@ public interface KnowledgeService {
     Tag createTag(@RequestBody Tag tag);
 
     @PostMapping("/{knowledgeId}/tags")
-    Knowledge addTagToKnowledge(@PathVariable String knowledgeId, @RequestParam String tagType, @RequestBody Tag tag);
+    Knowledge addTagToKnowledge(@PathVariable String knowledgeId, @RequestParam(defaultValue = "") String tagType, @RequestBody Tag tag);
 
     @DeleteMapping("/{knowledgeId}/tags/{tagId}")
     Knowledge removeTagFromKnowledge(@PathVariable String knowledgeId, @PathVariable String tagId);

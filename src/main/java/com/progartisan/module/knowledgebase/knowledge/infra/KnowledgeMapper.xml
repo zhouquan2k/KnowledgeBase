@@ -86,7 +86,15 @@
     <select id="getChildrenTags" resultMap="Tag">
         select *
         from tag
-        where parent_tag_id = #{tagId}
+        where 
+        <choose>
+            <when test="tagId != null and tagId != ''">
+                parent_tag_id = #{tagId}
+            </when>
+            <otherwise>
+                parent_tag_id is null and project = #{project}
+            </otherwise>
+        </choose>
         order by `order`
     </select>
 

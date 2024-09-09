@@ -136,7 +136,7 @@ export default {
       this.$refs.newTag.focus();
     },
     async onTagCreate() {
-      await knowledgeApi.addTagToKnowledge(this.currentKnowledge.knowledgeId, this.newTag ? { parentTagId: this.parentTag?.tagId, tagName: this.newTag, parent: { fullPath: this.parentTag?.fullPath } } : { tagId: this.parentTag?.tagId });
+      await knowledgeApi.addTagToKnowledge(this.currentKnowledge.knowledgeId, this.newTag ? { parentTagId: this.parentTag?.tagId, tagName: this.newTag, project: 'development', parent: { fullPath: this.parentTag?.fullPath } } : { tagId: this.parentTag?.tagId });
       this.showTagSelection = false;
       this.refreshKnowledge(this.currentKnowledge.knowledgeId);
     },

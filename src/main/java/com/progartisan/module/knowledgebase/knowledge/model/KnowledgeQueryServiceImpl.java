@@ -35,6 +35,11 @@ public class KnowledgeQueryServiceImpl implements KnowledgeQueryService {
         return result;
     }
 
+    @Override
+    public String getProjectTagTreeHtml(String project) {
+        return getTagHtml(project, null);
+    }
+
     private void getParentIds(Tag currentTag, List<String> tagIds) {
         if (Util.isEmpty(currentTag.getParentTagId())) {
             return;
@@ -46,19 +51,19 @@ public class KnowledgeQueryServiceImpl implements KnowledgeQueryService {
 
     @Override
     @Query
-    public String getTagHtml(String id) {
-        // var tag = knowledgeMapper.getTag(id);
-        // Util.check(tag != null, "tag not found: %s", id);
+    public String getTagHtml(String project, String id) {
         StringBuilder htmlContent = new StringBuilder();
         // 获取所有子标签
-        List<Tag> childrenTags = knowledgeMapper.getChildrenTags(id);
-        var knowledge = knowledgeMapper.getKnowledgeByTitleTagId(id);
+        List<Tag> childrenTags = knowledgeMapper.getChildrenTags(project, id);
+        var knowledge = Util.isNotEmpty(id) ? knowledgeMapper.getKnowledgeByTitleTagId(id) : null;
         htmlContent.append("<html><body>");
         // 获取所有这些子标签的 知识点
         if (!childrenTags.isEmpty()) {
             htmlContent.append("<ul>");
             childrenTags.forEach(child -> {
-                htmlContent.append("<li><a href=\"/api/knowledge/query/tag/")
+                htmlContent.append("<li><a href=\"/api/knowledge/query/")
+                        .append(project)
+                        .append("/tag/")
                         .append(child.getTagId())
                         .append(".html\">")
                         .append(child.getTagName())

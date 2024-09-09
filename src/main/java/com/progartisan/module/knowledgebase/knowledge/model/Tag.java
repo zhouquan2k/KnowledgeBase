@@ -51,6 +51,7 @@ public class Tag extends BaseEntity<Tag> {
         this.order = tag.order;
         this.parentTagId = tag.parentTagId;
         this.parent = tag.parent;
+        this.project = tag.project;
         calculate();
     }
 

@@ -150,7 +150,7 @@ public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements
 
     // adjust order and full path
     private void updateChildrenFullPath(Tag tag) {
-        List<Tag> children = knowledgeMapper.getChildrenTags(tag.getTagId());
+        List<Tag> children = knowledgeMapper.getChildrenTags(tag.getProject(), tag.getTagId());
         for (int i = 0; i < children.size(); i++) {
             var child = children.get(i);
             var theTag = knowledgeMapper.getTag(child.getTagId());
