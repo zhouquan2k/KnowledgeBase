@@ -1,22 +1,23 @@
 package com.progartisan.module.knowledgebase.knowledge.model;
 
-import com.progartisan.component.common.Util;
-import com.progartisan.component.data.BaseEntity;
-import com.progartisan.component.meta.Meta;
-import com.progartisan.component.meta.Meta.Type;
-import com.progartisan.component.meta.MetaEntity;
+import io.leanddd.component.common.Util;
+import io.leanddd.component.data.BaseEntity;
+import io.leanddd.component.meta.Meta;
+import io.leanddd.component.meta.Meta.Type;
+import io.leanddd.component.meta.MetaEntity;
 import com.progartisan.module.knowledgebase.knowledge.api.KnowledgeService;
 import com.progartisan.module.knowledgebase.knowledge.api.KnowledgeService.MoveType;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-import static com.progartisan.component.meta.Meta.BooleanEx.False;
+import static io.leanddd.component.meta.Meta.BooleanEx.False;
 
-@MetaEntity(tableName = "tag", defaultUpdatable = true)
+@MetaEntity(tableName = "kb_tag", defaultUpdatable = true)
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 public class Tag extends BaseEntity<Tag> {
 
@@ -40,10 +41,10 @@ public class Tag extends BaseEntity<Tag> {
     }
 
     // as a cache, need to be updated when rename
-    @Meta(value = Type.String, label = "完整路径")
+    @Meta(value = Type.String, label = "完整路径", length = 1000)
     private String fullPath;
 
-    @Meta(value = Type.None)
+    @Meta(persistable = False)
     private Tag parent;
 
     public Tag(Tag tag) {

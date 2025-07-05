@@ -6,7 +6,7 @@ import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.progartisan.component.spring.OpenApiHelper;
+import io.leanddd.component.spring.OpenApiHelper;
 
 @Configuration
 public class OpenApiConfig  {

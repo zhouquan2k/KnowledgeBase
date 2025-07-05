@@ -1,11 +1,11 @@
 package com.progartisan.module.knowledgebase.knowledge.model;
 
-import com.progartisan.component.common.Util;
-import com.progartisan.component.framework.Command;
-import com.progartisan.component.framework.Query;
-import com.progartisan.component.framework.Repository;
-import com.progartisan.component.framework.Service;
-import com.progartisan.component.framework.helper.CrudServiceImpl2;
+import io.leanddd.component.common.Util;
+import io.leanddd.component.meta.Command;
+import io.leanddd.component.meta.Query;
+import io.leanddd.component.framework.Repository;
+import io.leanddd.component.meta.Service;
+import io.leanddd.component.data.helper.CrudServiceImpl;
 import com.progartisan.module.knowledgebase.knowledge.api.KnowledgeService;
 import com.progartisan.module.knowledgebase.knowledge.infra.KnowledgeMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import java.util.HashMap;
 @Service(value = "知识管理", name = "knowledge")
 @Named
 @Slf4j
-public class KnowledgeServiceImpl extends CrudServiceImpl2<Knowledge> implements KnowledgeService {
+public class KnowledgeServiceImpl extends CrudServiceImpl<Knowledge> implements KnowledgeService {
 
     private final Repository<Tag> tagRepository;
     private final Repository<Knowledge> knowledgeRepository;

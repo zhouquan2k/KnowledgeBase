@@ -1,25 +1,26 @@
 package com.progartisan.module.knowledgebase.knowledge.model;
 
-import com.progartisan.component.data.BaseEntity;
-import com.progartisan.component.framework.helper.EntityHelper;
-import com.progartisan.component.meta.Meta;
-import com.progartisan.component.meta.Meta.Type;
-import com.progartisan.component.meta.MetaEntity;
+import io.leanddd.component.data.BaseEntity;
+import io.leanddd.component.data.EntityHelper;
+import io.leanddd.component.meta.Meta;
+import io.leanddd.component.meta.Meta.Type;
+import io.leanddd.component.meta.MetaEntity;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.progartisan.component.meta.Meta.BooleanEx.False;
-import static com.progartisan.component.meta.Meta.BooleanEx.True;
+import static io.leanddd.component.meta.Meta.BooleanEx.False;
+import static io.leanddd.component.meta.Meta.BooleanEx.True;
 
-@MetaEntity(tableName = "document")
+@MetaEntity(tableName = "kb_document")
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 public class Document extends BaseEntity<Document> {
 
@@ -38,25 +39,25 @@ public class Document extends BaseEntity<Document> {
     @Meta(value = Type.String, label = "项目名称", nullable = False)
     private String project;
 
-    @Meta(value = Type.Text, label = "原始输入", updatable = True)
+    @Meta(value = Type.Text, label = "原始输入", editable = True)
     private String rawInput;
 
-    @Meta(value = Type.Text, label = "需求", updatable = True)
+    @Meta(value = Type.Text, label = "需求", editable = True)
     private String requirement;
 
-    @Meta(value = Type.Text, label = "UI设计", updatable = True)
+    @Meta(value = Type.Text, label = "UI设计", editable = True)
     private String uiDesign;
 
-    @Meta(value = Type.Text, label = "设计", updatable = True)
+    @Meta(value = Type.Text, label = "设计", editable = True)
     private String design;
 
-    @Meta(value = Type.Text, label = "任务设计", updatable = True)
+    @Meta(value = Type.Text, label = "任务设计", editable = True)
     private String taskDesign;
 
     @Meta(value = Type.ToMany, label = "标签列表")
     private Set<DocumentTag> tags;
 
-    @MetaEntity(tableName = "document_tag")
+    @MetaEntity(tableName = "kb_document_tag")
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -77,12 +78,12 @@ public class Document extends BaseEntity<Document> {
         @Meta(value = Type.Integer, hidden = True)
         private Integer index;
 
-        @Meta(value = Type.None)
+        @Meta(persistable = False)
         private Tag tag;
     }
 
     @Override
-    public void update(Document document) {
+    public void update(Object document) {
         entityHelper.update(this, document);
     }
 

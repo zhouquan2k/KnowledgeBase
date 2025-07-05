@@ -1,7 +1,7 @@
 package com.progartisan.module.knowledgebase.example;
 
-import com.progartisan.component.data.impl.RepositoryImpl2;
-import com.progartisan.component.framework.Repository;
+import io.leanddd.component.data.RepositoryImpl;
+import io.leanddd.component.framework.Repository;
 import com.progartisan.module.knowledgebase.example.model.Example;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +13,7 @@ import org.springframework.data.repository.CrudRepository;
 public class ConfigExample {
     @Bean
     public Repository<Example> myExampleRepository(ExampleRepository springRepo) {
-        return new RepositoryImpl2<Example>(Example.class, springRepo);
+        return new RepositoryImpl<Example>(Example.class, springRepo);
     }
 }
 

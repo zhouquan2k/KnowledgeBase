@@ -1,6 +1,6 @@
 package com.progartisan.module.knowledgebase.knowledge.infra;
 
-import com.progartisan.component.data.BaseMapper;
+import io.leanddd.component.data.BaseMapper;
 import com.progartisan.module.knowledgebase.knowledge.model.Knowledge;
 import com.progartisan.module.knowledgebase.knowledge.model.Tag;
 import com.progartisan.module.knowledgebase.knowledge.model.Document;

@@ -1,18 +1,18 @@
 package com.progartisan.module.knowledgebase.knowledge.model;
 
-import com.progartisan.component.data.BaseEntity;
-import com.progartisan.component.meta.Meta;
-import com.progartisan.component.meta.Meta.Type;
-import com.progartisan.component.meta.MetaEntity;
-import com.progartisan.component.framework.helper.EntityHelper;
+import io.leanddd.component.data.BaseEntity;
+import io.leanddd.component.meta.Meta;
+import io.leanddd.component.meta.Meta.Type;
+import io.leanddd.component.meta.MetaEntity;
+import io.leanddd.component.data.EntityHelper;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import static com.progartisan.component.meta.Meta.BooleanEx.True;
+import static io.leanddd.component.meta.Meta.BooleanEx.True;
 
-@MetaEntity(tableName = "project", defaultUpdatable = true)
+@MetaEntity(tableName = "kb_project", defaultUpdatable = true)
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = false)
@@ -31,7 +31,7 @@ public class Project extends BaseEntity<Project> {
     private String projectPath;
 
     @Override
-    public void update(Project project) {
+    public void update(Object project) {
         entityHelper.update(this, project);
     }
 }

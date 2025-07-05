@@ -1,11 +1,11 @@
 package com.progartisan.module.knowledgebase.example.model;
 
-import com.progartisan.component.common.Util;
-import com.progartisan.component.framework.Command;
-import com.progartisan.component.framework.Query;
-import com.progartisan.component.framework.Repository;
-import com.progartisan.component.framework.Service;
-import com.progartisan.component.framework.helper.CrudServiceImpl2;
+import io.leanddd.component.common.Util;
+import io.leanddd.component.meta.Command;
+import io.leanddd.component.meta.Query;
+import io.leanddd.component.framework.Repository;
+import io.leanddd.component.meta.Service;
+import io.leanddd.component.data.helper.CrudServiceImpl;
 import com.progartisan.module.knowledgebase.example.api.ExampleService;
 import com.progartisan.module.knowledgebase.example.model.Example;
 import com.progartisan.module.knowledgebase.example.api.ExampleService;
@@ -19,7 +19,7 @@ import java.util.Map;
 @Service(value = "Example管理", name = "example")
 @Named
 @Slf4j
-public class ExampleServiceImpl extends CrudServiceImpl2<Example> implements ExampleService {
+public class ExampleServiceImpl extends CrudServiceImpl<Example> implements ExampleService {
 
     private final ExampleMapper exampleMapper;
 
@@ -37,7 +37,7 @@ public class ExampleServiceImpl extends CrudServiceImpl2<Example> implements Exa
     @Override
     @Query
     public Example getExample(String exampleId) {
-        return super.getOne(exampleId);
+        return super.getById(exampleId);
     }
 
     @Override

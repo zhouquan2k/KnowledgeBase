@@ -1,6 +1,6 @@
 package com.progartisan.module.knowledgebase.example.infra;
 
-import com.progartisan.component.data.BaseMapper;
+import io.leanddd.component.data.BaseMapper;
 import com.progartisan.module.knowledgebase.example.model.Assistant;
 import com.progartisan.module.knowledgebase.example.model.Example;
 import org.apache.ibatis.annotations.Mapper;

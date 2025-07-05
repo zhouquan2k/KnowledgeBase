@@ -38,17 +38,17 @@
 
     <select id="getKnowledge" resultMap="Knowledge">
         select *
-        from knowledge k
-        left join knowledge_tag kt on k.knowledge_id = kt.knowledge_id
-        left join tag t on kt.tag_id = t.tag_id
+        from kb_knowledge k
+        left join kb_knowledge_tag kt on k.knowledge_id = kt.knowledge_id
+        left join kb_tag t on kt.tag_id = t.tag_id
         where k.knowledge_id = #{knowledgeId}
     </select>
 
     <!-- 按tag查询知识项列表 -->
     <select id="queryKnowledgeByTag" resultMap="Knowledge">
         select *
-        from knowledge k
-        left join knowledge_tag kt on k.knowledge_id = kt.knowledge_id
+        from kb_knowledge k
+        left join kb_knowledge_tag kt on k.knowledge_id = kt.knowledge_id
         <if test="tagId != null and tagId != ''">
             where kt.tag_id = #{tagId}
         </if>
@@ -56,36 +56,36 @@
 
     <select id="getKnowledgeByTitleTagId" resultMap="Knowledge">
         select *
-        from knowledge k
-        left join knowledge_tag kt on k.knowledge_id = kt.knowledge_id
-        left join tag t on kt.tag_id = t.tag_id
+        from kb_knowledge k
+        left join kb_knowledge_tag kt on k.knowledge_id = kt.knowledge_id
+        left join kb_tag t on kt.tag_id = t.tag_id
         where kt.tag_type = 'title' and t.tag_id = #{tagId}
     </select>
 
     <!-- 按text查询tags -->
     <select id="getMatchedTags" resultMap="Tag">
         select *
-        from tag
+        from kb_tag
         where tag_name like CONCAT('%', #{text}, '%')
     </select>
 
     <!-- 按tagPath和order顺序获取标签树数据 -->
     <select id="queryTagTree" resultMap="Tag">
         select *
-        from tag
+        from kb_tag
         where project = #{projectName}
         order by parent_tag_id, `order`
     </select>
 
     <!-- 批量删除某个tagId的所有知识-标签 -->
     <delete id="removeTagFromAllKnowledge">
-        delete from knowledge_tag
+        delete from kb_knowledge_tag
         where tag_id = #{tagId}
     </delete>
 
     <select id="getChildrenTags" resultMap="Tag">
         select *
-        from tag
+        from kb_tag
         where 
         <choose>
             <when test="tagId != null and tagId != ''">
@@ -101,24 +101,24 @@
     <select id="getTag" resultMap="TagWithParent">
         select t.*, p.tag_name as _parent_tag_name, p.full_path as _parent_full_path, p.tag_id as _parent_tag_id,
         p.parent_tag_id as _parent_parent_tag_id
-        from tag t
-        left join tag p on t.parent_tag_id = p.tag_id
+        from kb_tag t
+        left join kb_tag p on t.parent_tag_id = p.tag_id
         where t.tag_id = #{tagId}
     </select>
 
     <!-- 按tag名精确找到tag -->
     <select id="getTagsByName" resultMap="Tag">
         select *
-        from tag
+        from kb_tag
         where tag_name = #{tagName}
     </select>
 
     <!-- 按tagName查询文档列表 -->
     <select id="queryDocuments" resultMap="Document">
         select *
-        from document d
-        left join document_tag dt on d.document_id = dt.document_id
-        left join tag t on dt.tag_id = t.tag_id
+        from kb_document d
+        left join kb_document_tag dt on d.document_id = dt.document_id
+        left join kb_tag t on dt.tag_id = t.tag_id
         where d.project = #{project}
         <if test="tagName != null and tagName != ''">
             and t.tag_name = #{tagName}
@@ -128,28 +128,28 @@
     <!-- 按documentId查询文档详情 -->
     <select id="getDocument" resultMap="Document">
         select *
-        from document d
-        left join document_tag dt on d.document_id = dt.document_id
-        left join tag t on dt.tag_id = t.tag_id
+        from kb_document d
+        left join kb_document_tag dt on d.document_id = dt.document_id
+        left join kb_tag t on dt.tag_id = t.tag_id
         where d.document_id = #{documentId}
     </select>
 
     <select id="getDocumentByProjectAndName" resultMap="DocumentOnly">
         select *
-        from document d
+        from kb_document d
         where d.project = #{project} and d.document_name = #{baseName}
     </select>
 
     <!-- 查所有项目 -->
     <select id="queryAllProjects" resultMap="Project">
         select *
-        from project
+        from kb_project
     </select>
 
     <!-- 按projectName查项目详情 -->
     <select id="getProject" resultMap="Project">
         select *
-        from project
+        from kb_project
         where project_name = #{projectName}
     </select>
 

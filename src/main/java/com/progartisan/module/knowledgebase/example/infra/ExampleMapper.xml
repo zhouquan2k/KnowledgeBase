@@ -10,7 +10,7 @@
 
     <!-- 查询所有example -->
     <select id="queryExamples" resultMap="Example">
-        select * from example
+        select * from kb_example
         where 1 = 1
         <if test="params.assistantId != null">
             and assistant_id = #{params.assistantId}
@@ -19,6 +19,6 @@
 
     <!-- 查询所有assistants -->
     <select id="queryAssistants" resultMap="Assistant">
-        select * from assistant
+        select * from kb_assistant
     </select>
 </mapper>

@@ -1,21 +1,22 @@
 package com.progartisan.module.knowledgebase.knowledge.model;
 
-import com.progartisan.component.common.Util;
-import com.progartisan.component.data.BaseEntity;
-import com.progartisan.component.meta.Meta;
-import com.progartisan.component.meta.Meta.Type;
-import com.progartisan.component.meta.MetaEntity;
-import com.progartisan.component.framework.helper.EntityHelper;
+import io.leanddd.component.common.Util;
+import io.leanddd.component.data.BaseEntity;
+import io.leanddd.component.meta.Meta;
+import io.leanddd.component.meta.Meta.Type;
+import io.leanddd.component.meta.MetaEntity;
+import io.leanddd.component.data.EntityHelper;
 import lombok.*;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
-import static com.progartisan.component.meta.Meta.BooleanEx.False;
-import static com.progartisan.component.meta.Meta.BooleanEx.True;
+import static io.leanddd.component.meta.Meta.BooleanEx.False;
+import static io.leanddd.component.meta.Meta.BooleanEx.True;
 
-@MetaEntity(tableName = "knowledge")
+@MetaEntity(tableName = "kb_knowledge")
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = false)
@@ -28,16 +29,16 @@ public class Knowledge extends BaseEntity<Knowledge> {
     @Meta(value = Type.ID, label = "知识项ID")
     private String knowledgeId;
 
-    @Meta(value = Type.String, label = "标题", nullable = False, searchable = True, updatable = True)
+    @Meta(value = Type.String, label = "标题", nullable = False, searchable = True, editable = True)
     private String title;
 
-    @Meta(value = Type.Text, label = "内容", nullable = False, updatable = True)
+    @Meta(value = Type.Text, label = "内容", nullable = False, editable = True)
     private String content;
 
     @Meta(value = Type.ToMany, label = "标签列表")
     private Set<KnowledgeTag> tags;
 
-    @MetaEntity(tableName = "knowledge_tag")
+    @MetaEntity(tableName = "kb_knowledge_tag")
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -58,12 +59,12 @@ public class Knowledge extends BaseEntity<Knowledge> {
         @Meta(value = Type.Integer, hidden = True)
         private Integer index;
 
-        @Meta(value = Type.None)
+        @Meta(persistable = False)
         private Tag tag;
     }
 
     @Override
-    public void update(Knowledge knowledge) {
+    public void update(Object knowledge) {
         entityHelper.update(this, knowledge);
     }
 
@@ -82,7 +83,7 @@ public class Knowledge extends BaseEntity<Knowledge> {
     }
 
     public String getTitleTagId() {
-        var titleTagId = this.tags.stream().filter(tag -> Util.equals(tag.getTagType(), "title")).findFirst().map(KnowledgeTag::getTagId).orElse(null);
+        var titleTagId = this.tags.stream().filter(tag -> Objects.equals(tag.getTagType(), "title")).findFirst().map(KnowledgeTag::getTagId).orElse(null);
         return titleTagId;
     }
 

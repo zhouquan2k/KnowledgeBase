@@ -2,7 +2,7 @@ import { request } from '@/utils/utils';
 
 export default class KnowledgeApi {
     constructor() {
-        this.baseUrl = `/api/knowledge`;
+        this.baseUrl = `/knowledge`;
     }
 
     async saveKnowledge(knowledge, currentTagId) {

@@ -1,7 +1,7 @@
 package com.progartisan.module.knowledgebase.knowledge;
 
-import com.progartisan.component.data.impl.RepositoryImpl2;
-import com.progartisan.component.framework.Repository;
+import io.leanddd.component.data.RepositoryImpl;
+import io.leanddd.component.framework.Repository;
 import com.progartisan.module.knowledgebase.example.model.Example;
 import com.progartisan.module.knowledgebase.knowledge.model.Document;
 import com.progartisan.module.knowledgebase.knowledge.model.Knowledge;
@@ -16,17 +16,17 @@ import org.springframework.data.repository.CrudRepository;
 public class ConfigKnowledge {
     @Bean
     public Repository<Knowledge> myKnowledgeRepository(KnowledgeRepository springRepo) {
-        return new RepositoryImpl2<Knowledge>(Knowledge.class, springRepo);
+        return new RepositoryImpl<Knowledge>(Knowledge.class, springRepo);
     }
 
     @Bean
     public Repository<Tag> myTagRepository(TagRepository springRepo) {
-        return new RepositoryImpl2<Tag>(Tag.class, springRepo);
+        return new RepositoryImpl<Tag>(Tag.class, springRepo);
     }
 
     @Bean
     public Repository<Document> myDocumentRepository(DocumentRepository springRepo) {
-        return new RepositoryImpl2<Document>(Document.class, springRepo);
+        return new RepositoryImpl<Document>(Document.class, springRepo);
     }
 }
 

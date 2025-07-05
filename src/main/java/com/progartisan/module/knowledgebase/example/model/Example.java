@@ -1,16 +1,16 @@
 package com.progartisan.module.knowledgebase.example.model;
 
-import com.progartisan.component.data.BaseEntity;
-import com.progartisan.component.meta.Meta;
-import com.progartisan.component.meta.Meta.Type;
-import com.progartisan.component.meta.MetaEntity;
-import com.progartisan.component.framework.helper.EntityHelper;
+import io.leanddd.component.data.BaseEntity;
+import io.leanddd.component.meta.Meta;
+import io.leanddd.component.meta.Meta.Type;
+import io.leanddd.component.meta.MetaEntity;
+import io.leanddd.component.data.EntityHelper;
 import lombok.*;
 
-import static com.progartisan.component.meta.Meta.BooleanEx.False;
-import static com.progartisan.component.meta.Meta.BooleanEx.True;
+import static io.leanddd.component.meta.Meta.BooleanEx.False;
+import static io.leanddd.component.meta.Meta.BooleanEx.True;
 
-@MetaEntity(tableName="example", defaultUpdatable = true)
+@MetaEntity(tableName="kb_example", defaultUpdatable = true)
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = false)
@@ -25,7 +25,7 @@ public class Example extends BaseEntity<Example> {
     @Meta(value = Type.String, label = "描述")
     private String description;
 
-    @Meta(value = Type.RefIDStr, label = "AssistantID", nullable = False, searchable = True, updatable = True)
+    @Meta(value = Type.RefIDStr, label = "AssistantID", nullable = False, searchable = True, editable = True)
     private String assistantId;
 
     @Meta(value = Type.Text, label = "输入文本", nullable = False)
@@ -38,7 +38,7 @@ public class Example extends BaseEntity<Example> {
     private String originContent;
 
     @Override
-    public void update(Example example) {
+    public void update(Object example) {
         entityHelper.update(this, example);
     }
 }

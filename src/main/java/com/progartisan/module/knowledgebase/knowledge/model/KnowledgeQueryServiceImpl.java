@@ -1,8 +1,8 @@
 package com.progartisan.module.knowledgebase.knowledge.model;
 
-import com.progartisan.component.common.Util;
-import com.progartisan.component.framework.Query;
-import com.progartisan.component.framework.Service;
+import io.leanddd.component.common.Util;
+import io.leanddd.component.meta.Query;
+import io.leanddd.component.meta.Service;
 import com.progartisan.module.knowledgebase.knowledge.api.KnowledgeQueryService;
 import com.progartisan.module.knowledgebase.knowledge.infra.KnowledgeMapper;
 import lombok.RequiredArgsConstructor;

@@ -1,17 +1,17 @@
 package com.progartisan.module.knowledgebase.example.model;
 
-import com.progartisan.component.data.BaseEntity;
-import com.progartisan.component.framework.helper.EntityHelper;
-import com.progartisan.component.meta.Meta;
-import com.progartisan.component.meta.Meta.Type;
-import com.progartisan.component.meta.MetaEntity;
+import io.leanddd.component.data.BaseEntity;
+import io.leanddd.component.data.EntityHelper;
+import io.leanddd.component.meta.Meta;
+import io.leanddd.component.meta.Meta.Type;
+import io.leanddd.component.meta.MetaEntity;
 
 import lombok.*;
 
-import static com.progartisan.component.meta.Meta.BooleanEx.False;
-import static com.progartisan.component.meta.Meta.BooleanEx.True;
+import static io.leanddd.component.meta.Meta.BooleanEx.False;
+import static io.leanddd.component.meta.Meta.BooleanEx.True;
 
-@MetaEntity(tableName="assistant", defaultUpdatable = true)
+@MetaEntity(tableName="kb_assistant", defaultUpdatable = true)
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = false)
@@ -34,7 +34,7 @@ public class Assistant extends BaseEntity<Assistant> {
     private String systemText;
 
     @Override
-    public void update(Assistant assistant) {
+    public void update(Object assistant) {
         entityHelper.update(this, assistant);
     }
 }

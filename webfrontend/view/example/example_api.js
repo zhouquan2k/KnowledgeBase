@@ -2,7 +2,7 @@ import { request } from '@/utils/utils';
 
 export default class ExampleApi {
     constructor() {
-        this.baseUrl = `/api/examples`;
+        this.baseUrl = `/examples`;
     }
 
     async getExamples(params) {

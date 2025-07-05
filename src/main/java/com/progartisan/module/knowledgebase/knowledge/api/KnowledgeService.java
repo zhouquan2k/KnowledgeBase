@@ -1,7 +1,7 @@
 package com.progartisan.module.knowledgebase.knowledge.api;
 
-import com.progartisan.component.framework.EnumDescription;
-import com.progartisan.component.framework.EnumTag;
+import io.leanddd.component.meta.EnumDescription;
+import io.leanddd.component.meta.EnumTag;
 import com.progartisan.module.knowledgebase.knowledge.model.Knowledge;
 import com.progartisan.module.knowledgebase.knowledge.model.Tag;
 import com.progartisan.module.knowledgebase.knowledge.model.Document;

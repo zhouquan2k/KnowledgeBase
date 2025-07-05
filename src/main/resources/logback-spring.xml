@@ -2,19 +2,19 @@
     <!-- 引用 Spring Boot 的 logback 基础配置 -->
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <conversionRule conversionWord="threadId"
-                    converterClass="com.progartisan.component.spring.LogbackThreadIdConvensionRule"/>
+                    converterClass="io.leanddd.component.spring.LogbackThreadIdConvensionRule"/>
     <property name="PATTERN_TRADITIONAL"
-              value="%d{dd/HH:mm:ss.SSS} %-5level[%15.-15logger{0}-%-4.-4threadId] - %msg %n"/>
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level[%15.-15logger{0}-%-4.-4threadId] - %msg %n"/>
     <!-- 控制台 Appender -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">　
         <encoder>　　　　
-                <pattern>${PATTERN_TRADITIONAL}</pattern>
+            <pattern>${PATTERN_TRADITIONAL}</pattern>
         </encoder>
     </appender>
 
     <!-- 文件 Appender -->
     <!-- 参考 Spring Boot 的 file-appender.xml 编写 -->
-    <appender name="FILE"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>　　　　
             <pattern>${PATTERN_TRADITIONAL}</pattern>
         </encoder>
@@ -22,7 +22,8 @@
         <file>${LOG_FILE}</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- 滚动后的日志文件名 -->
-            <fileNamePattern>${LOGBACK_ROLLINGPOLICY_FILE_NAME_PATTERN:-${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz}</fileNamePattern>
+            <fileNamePattern>${LOGBACK_ROLLINGPOLICY_FILE_NAME_PATTERN:-${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz}
+            </fileNamePattern>
             <!-- 启动服务时，是否清理历史日志，一般不建议清理 -->
             <cleanHistoryOnStart>${LOGBACK_ROLLINGPOLICY_CLEAN_HISTORY_ON_START:-false}</cleanHistoryOnStart>
             <!-- 日志文件，到达多少容量，进行滚动 -->
@@ -59,18 +60,28 @@
             <!--  appender-ref ref="GRPC"/ --> <!-- 本地环境下，如果不想接入 SkyWalking 日志服务，可以注释掉本行 -->
             <appender-ref ref="ASYNC"/>  <!-- 本地环境下，如果不想打印日志，可以注释掉本行 -->
         </root>
-        <logger name="org.springframework" level="DEBUG"/>
     </springProfile>
     <!-- 其它环境 -->
-    <springProfile name="dev,test,test-local,default">
+    <springProfile name="dev,test-local,default">
         <root level="INFO">
             <appender-ref ref="STDOUT"/>
             <appender-ref ref="ASYNC"/>
         </root>
+        <logger name="io.leanddd" level="DEBUG"/>
         <logger name="com.progartisan" level="DEBUG"/>
         <logger name="com.gitee.sunchenbin" level="DEBUG"/>
         <logger name="org.springframework" level="DEBUG"/>
         <logger name="org.springframework.jdbc.core" level="DEBUG"/>
+    </springProfile>
+    <springProfile name="test,prod">
+        <root level="WARN">
+            <appender-ref ref="ASYNC"/>
+        </root>
+        <logger name="io.leanddd" level="DEBUG"/>
+        <logger name="com.progartisan" level="DEBUG"/>
+        <logger name="com.gitee.sunchenbin" level="DEBUG"/>
+        <logger name="org.springframework" level="INFO"/>
+        <logger name="org.springframework.jdbc.core" level="INFO"/>
     </springProfile>
 
 </configuration>
